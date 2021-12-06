@@ -2,36 +2,48 @@ package DataBase;
 
 import BusinessLayer.Workers.Technician;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class TechnicianDAO extends DAOClass{
 
 
-    public TechnicianDAO(){
+    public Map<String, Technician> technicianDAO = new HashMap<>();
 
-        //TODO
-    }
 
-    public Technician get(){
+    public Technician get(String username){
 
-        //TODO
-        return null;
+        return technicianDAO.get(username);
     }
 
 
-    public boolean insert(){
+    public boolean insert(Technician technician){
 
-        //TODO
-        return false;
+        if(technicianDAO.containsKey(technician.getUsername())){
+            return false;
+        }
+        technicianDAO.put(technician.getUsername(),technician);
+        return true;
     }
 
-    public boolean remove(){
+    public boolean remove(String username){
 
-        //TODO
-        return false;
+        if(!technicianDAO.containsKey(username)){
+            return false;
+        }
+        technicianDAO.remove(username);
+        return true;
     }
 
-    public boolean update(){
+    public boolean update(Technician technician){
 
-        //TODO
-        return false;
+        if(!technicianDAO.containsKey(technician.getUsername())){
+            return insert(technician);
+        }
+        else{
+            this.remove(technician.getUsername());
+            this.insert(technician);
+            return true;
+        }
     }
 }

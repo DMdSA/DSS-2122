@@ -2,37 +2,52 @@ package DataBase;
 
 import BusinessLayer.Client.Client;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ClientDAO extends DAOClass{
 
+    public Map<String,Client> clientDAO = new HashMap<>(); //<NIF,Client>
 
-    public ClientDAO(){
 
-        //TODO
+    public Client get(String nif){
+
+        return clientDAO.get(nif);
     }
 
-    public Client get(){
+    public boolean insert(Client client){
 
-        //TODO
-        return null;
+        if(clientDAO.containsKey(client.getNIF())){
+            return false;
+        }
+        else{
+            clientDAO.put(client.getNIF(),client);
+            return true;
+        }
     }
 
+    public boolean remove(String username){
 
-    public boolean insert(){
-
-        //TODO
+        if(!clientDAO.containsKey(username)){
+            return false;
+        }
+        else{
+            clientDAO.remove(username);
+        }
         return false;
     }
 
-    public boolean remove(){
+    public boolean update(Client client){
 
-        //TODO
-        return false;
-    }
-
-    public boolean update(){
-
-        //TODO
-        return false;
+        if(!clientDAO.containsKey(client.getNIF())){
+            this.insert(client);
+            return false;
+        }
+        else{
+            this.remove(client.getNIF());
+            this.insert(client);
+            return true;
+        }
     }
 
 }

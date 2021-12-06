@@ -1,7 +1,11 @@
 package DataBase;
 
+import BusinessLayer.Workers.CounterWorker;
+
 import java.sql.Connection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class DAOClass {
 
@@ -11,7 +15,6 @@ public abstract class DAOClass {
     private String table;
     private Object key;
     private List<String> columns;
-
 
 
     /*
