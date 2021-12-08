@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+// CRUD
 public class FixedServicesDAO {
 
     private Map<Integer, FixedService> services;

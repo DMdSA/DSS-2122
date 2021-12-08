@@ -11,13 +11,6 @@ public class ClientDAO {
     public Map<String,Client> clients = new HashMap<>();
 
 
-
-
-    
-
-
-
-
     /**
      *
      * @param nif
@@ -72,7 +65,6 @@ public class ClientDAO {
     public boolean update(Client client){
 
         // Só dá update se o cliente existir, senão, terá de adicionar um novo
-
         if(this.clients.containsKey(client.getNIF())){
             this.clients.put(client.getNIF(), client);
             return true;

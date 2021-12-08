@@ -18,7 +18,7 @@ public class WorkersFuncions implements IWorkersFuncions {
 
                 if(counterWorkerDAOClass.counterWorkerDAO.get(username).getPassword().equals(password)){
                     flag = true;
-                    counterWorkerDAOClass.counterWorkerDAO.get(username).setAutenticatedStatus(true);
+                    counterWorkerDAOClass.counterWorkerDAO.get(username).setAuthenticated(true);
                 }
                 else{
                     retry = IWorkersFuncions.wrong_credentials();
@@ -41,11 +41,11 @@ public class WorkersFuncions implements IWorkersFuncions {
     }
 
     public boolean isAutenticated(String username){
-        return counterWorkerDAOClass.counterWorkerDAO.get(username).getAutenticatedStatus();
+        return counterWorkerDAOClass.counterWorkerDAO.get(username).getAuthenticated();
     }
 
     public boolean isAutenticated(CounterWorker counterWorker){
-        return counterWorkerDAOClass.counterWorkerDAO.get(counterWorker.getUsername()).getAutenticatedStatus();
+        return counterWorkerDAOClass.counterWorkerDAO.get(counterWorker.getUsername()).getAuthenticated();
     }
 
 }
