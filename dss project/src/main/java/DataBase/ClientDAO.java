@@ -5,49 +5,79 @@ import BusinessLayer.Client.Client;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ClientDAO extends DAOClass{
+public class ClientDAO {
 
-    public Map<String,Client> clientDAO = new HashMap<>(); //<NIF,Client>
+    // Map< NIF, CLIENT >
+    public Map<String,Client> clients = new HashMap<>();
 
 
+
+
+    
+
+
+
+
+    /**
+     *
+     * @param nif
+     * @return
+     */
     public Client get(String nif){
-
-        return clientDAO.get(nif);
+        return clients.get(nif);
     }
 
-    public boolean insert(Client client){
+    // Como obter clientes por Número de telemóvel?
+    // Só se percorresse cliente a cliente
 
-        if(clientDAO.containsKey(client.getNIF())){
+    /**
+     *
+     * @param client
+     * @return
+     */
+    public boolean add(Client client){
+
+        if(clients.containsKey(client.getNIF())){
+            // User already exists
             return false;
         }
         else{
-            clientDAO.put(client.getNIF(),client);
+            // User is added to MAP of clients
+            clients.put(client.getNIF(),client);
             return true;
         }
     }
 
-    public boolean remove(String username){
+    /**
+     *
+     * @param NIF
+     * @return
+     */
+    public boolean remove(String NIF){
 
-        if(!clientDAO.containsKey(username)){
+        if(!clients.containsKey(NIF)){
+            // The requested client does not exist
             return false;
         }
-        else{
-            clientDAO.remove(username);
-        }
-        return false;
+            // The client is successfully removed
+            clients.remove(NIF);
+            return true;
     }
 
+    /**
+     *
+     * @param client
+     * @return
+     */
     public boolean update(Client client){
 
-        if(!clientDAO.containsKey(client.getNIF())){
-            this.insert(client);
-            return false;
-        }
-        else{
-            this.remove(client.getNIF());
-            this.insert(client);
+        // Só dá update se o cliente existir, senão, terá de adicionar um novo
+
+        if(this.clients.containsKey(client.getNIF())){
+            this.clients.put(client.getNIF(), client);
             return true;
         }
+        return false;
     }
 
 }

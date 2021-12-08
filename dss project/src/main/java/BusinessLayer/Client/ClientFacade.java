@@ -1,20 +1,26 @@
 package BusinessLayer.Client;
 
+
 import BusinessLayer.IClient;
+import DataBase.ClientDAO;
 
 public class ClientFacade implements IClient {
 
     // search why this visibility
-    Client c;
 
-    public String nif(){return c.getNIF();}
+    // Is there any need for this class?
 
-    public String name(){ return c.getName();}
 
-    public String phonenumber(){ return c.getPhonenumber();}
+    Client client;
 
-    public String email(){ return c.getEmail();}
+    public String nif(){return client.getNIF();}
 
-    public String birthday() { return c.getBirthday().toString();}
+    public String name(){ return client.getName();}
+
+    public String phonenumber(){ return client.getPhonenumber();}
+
+    public String email(){ return client.getEmail();}
+
+    public String birthday() { return client.getBirthday().toString();}
 
 }

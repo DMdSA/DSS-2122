@@ -11,11 +11,6 @@ public class Client {
     private LocalDate birthday;
     private String phone_number;
 
-    public Client(){
-
-    }
-
-
 
     public Client(String name, String nif, String email){
 
