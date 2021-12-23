@@ -8,6 +8,9 @@ import java.util.UUID;
 
 public class Budget {
 
+    /**
+     * Instance Variables
+     */
     private UUID budgetID;                                                      // budget id
 
     private String clientID;                                                    // Client
@@ -18,7 +21,9 @@ public class Budget {
     private List<Triplet<String, LocalTime, Double>> estimatedTODO;             // Passos
     private BudgetStatus status;                                                // Status
 
-
+    /**
+     * Constructors
+     */
     public Budget(String clientID, Equipment e, String tech_username){
 
         this.budgetID = UUID.randomUUID();
@@ -37,7 +42,7 @@ public class Budget {
     /**
      * Getters
      */
-    //falta clone ??
+    //falta clone ?? todo
 
     public UUID getBudgetID(){return this.budgetID;}
     public String getClientID(){ return this.clientID;}
@@ -52,7 +57,7 @@ public class Budget {
     /**
      * Setters
      */
-    // clones ???
+    // clones ??? todo
     public void setClientID(String clientID) {
         this.clientID = clientID;
     }
@@ -78,13 +83,51 @@ public class Budget {
      */
     public boolean equals(Object o){
 
+        if(this == o) return true;
+        if(this.getClass() != o.getClass() || o == null) return false;
 
+        Budget that = (Budget) o;
 
+        return this.budgetID.equals(that.budgetID) &&
+                this.clientID.equals(that.clientID) &&
+                this.finalPrice == that.finalPrice &&
+                this.tech_username.equals(that.tech_username) &&
+                this.requestDate.equals(that.requestDate) &&
+                this.estimatedTODO.equals(that.estimatedTODO) &&
+                this.status.equals(that.status);
+    }
 
+    /**
+     * toString
+     */
+    public String toString(){
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("BudgetId:\"")
+                .append(this.budgetID)
+                .append("\", clientId:\"")
+                .append(this.clientID)
+                .append("\", Price:\"")
+                .append(this.finalPrice)
+                .append("\", tech responsible:\"")
+                .append(this.tech_username)
+                .append("\", request date:\"")
+                .append(this.requestDate)
+                .append("\", status:\"")
+                .append(this.status)
+                .append("\"");
+        return sb.toString();
+    }
+
+    /**
+     * TODO
+     * @return
+     */
+    public String todoListToString(){
+        //todo
+        return null;
     }
 
 
-    /**
-     * String
-     */
 }
