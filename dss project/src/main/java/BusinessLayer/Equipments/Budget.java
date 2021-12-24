@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class Budget {
+public class Budget implements Comparable<Budget>{
 
     /**
      * Instance Variables
@@ -24,6 +24,34 @@ public class Budget {
     /**
      * Constructors
      */
+    // Destinado à criação por um CounterWorker
+    public Budget(String clientID, Equipment e){
+
+        this.budgetID = UUID.randomUUID();
+        this.clientID = clientID;
+        this.equip = e;
+        this.finalPrice = -1;
+        this.tech_username = null;
+        this.requestDate = LocalDate.now();
+        this.estimatedTODO = new ArrayList<>();
+        this.status = BudgetStatus.WITHOUT_BUDGET;
+    }
+
+    // Constructor destinado a pedidos EXPRESSO
+    public Budget(String clientId, Equipment e, double FinalPrice){
+
+        this.budgetID = UUID.randomUUID();
+        this.clientID = clientID;
+        this.equip = e;
+        this.finalPrice = FinalPrice;
+        this.tech_username = null;
+        this.requestDate = LocalDate.now();
+        this.estimatedTODO = new ArrayList<>();
+        this.status = BudgetStatus.WAITING_REPAIR;
+
+    }
+
+
     public Budget(String clientID, Equipment e, String tech_username){
 
         this.budgetID = UUID.randomUUID();
@@ -129,5 +157,15 @@ public class Budget {
         return null;
     }
 
+    /**
+     * compareTo para budgets
+     * @param o
+     * @return
+     */
+    @Override
+    public int compareTo(Budget o) {
 
+        // verificar se funciona
+        return this.requestDate.compareTo(o.getRequestDate());
+    }
 }

@@ -2,7 +2,6 @@ package BusinessLayer.Equipments;
 
 public enum BudgetStatus {
 
-
     WITHOUT_BUDGET(1),
     WAITING_APPROVAL(2),
     DECLINED(3),

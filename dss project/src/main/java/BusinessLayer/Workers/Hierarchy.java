@@ -2,6 +2,7 @@ package BusinessLayer.Workers;
 
 public enum Hierarchy {
 
+
     COUNTER(1),
     TECHNICIAN(2),
     MANAGER(3);

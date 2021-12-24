@@ -7,12 +7,23 @@ import java.util.Map;
 
 public class ClientDAO {
 
+    /**
+     * Instance Variables
+     */
     // Map< NIF, CLIENT >
-    public Map<String,Client> clients = new HashMap<>();
+    private Map<String,Client> clients = new HashMap<>();
+
+    /**
+     * Constructor
+     */
+    public ClientDAO(){
+        this.clients = new HashMap<>();
+        //TODO
+    }
 
 
     /**
-     *
+     * Get a client by his nif
      * @param nif
      * @return
      */
@@ -23,8 +34,18 @@ public class ClientDAO {
     // Como obter clientes por Número de telemóvel?
     // Só se percorresse cliente a cliente
 
+
     /**
-     *
+     * Get all clients
+     */
+    public Map<String, Client> get(){
+        return this.clients;
+        // TODO clone??
+    }
+
+
+    /**
+     * Add a new client
      * @param client
      * @return
      */
@@ -42,7 +63,7 @@ public class ClientDAO {
     }
 
     /**
-     *
+     * Remove a client
      * @param NIF
      * @return
      */
@@ -58,7 +79,7 @@ public class ClientDAO {
     }
 
     /**
-     *
+     * Update a client
      * @param client
      * @return
      */
