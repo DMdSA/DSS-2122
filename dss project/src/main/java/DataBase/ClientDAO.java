@@ -1,17 +1,20 @@
 package DataBase;
 
 import BusinessLayer.Client.Client;
+import BusinessLayer.Services.Service;
 
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ClientDAO {
+public class ClientDAO implements Serializable {
 
     /**
      * Instance Variables
      */
     // Map< NIF, CLIENT >
-    private Map<String,Client> clients = new HashMap<>();
+    private Map<String,Client> clients;
+    private static final String path = "C:\\Users\\diogo\\Ambiente de Trabalho\\UNIVERSIDADE MINHO\\3ano\\1semestre\\Desenvolvimento Sistemas Software\\Trabalho Pratico\\dss project\\src\\main\\java\\DataBase\\clients";
 
     /**
      * Constructor
@@ -27,12 +30,20 @@ public class ClientDAO {
      * @param nif
      * @return
      */
-    public Client get(String nif){
-        return clients.get(nif);
+    public Client getByNif(String nif){
+        return this.clients.getOrDefault(nif, null);
     }
 
-    // Como obter clientes por Número de telemóvel?
-    // Só se percorresse cliente a cliente
+    public Client getByPhone(String phone){
+
+        for(Map.Entry<String, Client> e : this.clients.entrySet()){
+
+            if(e.getValue().getPhonenumber().equals(phone)){
+                return e.getValue();
+            }
+        }
+        return null;
+    }
 
 
     /**
@@ -92,5 +103,37 @@ public class ClientDAO {
         }
         return false;
     }
+
+
+
+    /*
+    public void WriteObjectToFile() {
+        try {
+            FileOutputStream fileOut = new FileOutputStream(path);
+            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
+            objectOut.writeObject(this);
+            objectOut.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    public ClientDAO loadFileToObject() throws IOException, ClassNotFoundException {
+
+        this.clients = new HashMap<>();
+
+        FileInputStream fileStream = new FileInputStream(path);
+        ObjectInputStream input = new ObjectInputStream(fileStream);
+
+        Object o = input.readObject();
+
+        if(o instanceof ClientDAO){
+            return (ClientDAO) o;
+        }
+        return null;
+    }
+    */
 
 }

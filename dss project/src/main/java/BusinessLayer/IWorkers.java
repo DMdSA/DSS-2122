@@ -4,7 +4,9 @@ import BusinessLayer.Client.Client;
 
 public interface IWorkers {
 
-    Client getClient();
+    Client getClientByNif(String nif);
+    Client getClientByPhone(String phone);
+
     boolean registerClient();
     boolean updateClient();
     boolean removeClient();
@@ -13,7 +15,7 @@ public interface IWorkers {
     boolean registerExpressService();
     boolean registerBudgetRequest();
 
-    void consultExpressService();
+    //void consultExpressService();
     void consultExpressServices();
 
     boolean updateBudgetStatus();

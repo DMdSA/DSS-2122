@@ -8,6 +8,10 @@ import BusinessLayer.Workers.Manager;
 import BusinessLayer.Workers.Technician;
 import DataBase.ClientDAO;
 import DataBase.WorkersDAO;
+import UI.Menu;
+
+import java.lang.reflect.Array;
+import java.util.Arrays;
 
 public class Main {
 
@@ -52,8 +56,72 @@ public class Main {
 
         ClientDAO clientsdatabase = new ClientDAO();
         clientsdatabase.add(client1);clientsdatabase.add(client2);clientsdatabase.add(client3);clientsdatabase.add(client4);clientsdatabase.add(client5);
-        System.out.println("Added " + clientsdatabase.get().size() + " clients");
+        System.out.println("Added " + clientsdatabase.get().size() + " clients\n\n");
 
+        /**
+         * Menus examples ------\()/--------
+         */
+
+        Menu introduction = new Menu("Miei Repair Center", Arrays.asList("Program developed by group xx", "Version 1.0", "2021/2022", "UMINHO"));
+        introduction.show();System.out.println("\n");
+
+        Menu loginMenu = new Menu("Login - Welcome", Arrays.asList("Exit", "Login", "Credits"));
+        loginMenu.show();System.out.println("\n");
+
+        // era fixe aqui aparecer o user do counter v
+        Menu CounterMenu = new Menu("Counter - [@user]",
+                Arrays.asList("Exit", "Consult Client", "Register Client", "Register Normal Service"
+                        , "Register Express Service", "Consult Express Services", "Consult Budget Request"
+                        , "Check Technician Availability"));
+        CounterMenu.show();
+        /**
+         * Pre - Conditions
+         * 0 -> none
+         * 1 -> logged in + have > 0 clients
+         * 2 -> logged in
+         * 3 -> logged in + > 0 technicians + > 0 clients
+         * 4 -> logged in + > 0 technicians + > 0 clients
+         * 5 -> logged in + have > 0 express service
+         * 6 -> logged in + have > 0 budget request (normal service)
+         * 7 -> logged in + have > 0 technicians
+         */
+
+        Menu CounterMenuConsultClient = new Menu("Search Client", Arrays.asList("Back", "byNif", "byPhone"));
+        /**
+         * Pre - Conditions
+         * 0 -> none
+         * 1 -> none
+         * 2 -> none
+         */
+
+        Menu CounterMenuConsultBudgetRequest = new Menu("Buget Request"
+                , Arrays.asList("Back", "by Client", "by ID"));
+        /**
+         * Pre - Conditions
+         * 0 -> none
+         * 1 -> none
+         * 2 -> none
+         */
+
+
+        Menu TechnicianMenu = new Menu("Technician - [@user]"
+                , Arrays.asList("Exit", "Consult Budget Requests", "Consult Express Requests"));
+        /**
+         * Pre - Conditions
+         * 0 -> none
+         * 1 -> login + > 0 budget requests (normal service)
+         * 2 -> login + > 0 express requests (express service)
+         */
+
+        Menu TechMenuBudgetRequests = new Menu("Tech - [@user] - [Budget Requests]"
+                , Arrays.asList("Back", "by ID", "by Client", "Latest"));
+        /**
+         * Pre - Conditions
+         * 0 -> none
+         * 1 -> none
+         * 2 -> none
+         * 3 -> none
+         */
 
 
     }

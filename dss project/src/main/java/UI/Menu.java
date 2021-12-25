@@ -82,10 +82,14 @@ public class Menu {
         this.handlers.set(menuIndex, h);
     }
 
-
+    /**
+     * SHOW a menu, represented by it's available options and handlers
+     * If an option is read as available, it is shown and handled
+     * Otherwise, it will not be available for the user to use
+     */
     public void show(){
 
-        System.out.println("\\---<>*"+this.title+"*<>---\\");
+        System.out.println("\\---<>* "+this.title+" *<>---\\");
 
         for(int i = 1; i < this.options.size(); i++){
             System.out.print("("+i+") -> ");
@@ -95,6 +99,11 @@ public class Menu {
     }
 
 
+    /**
+     * readOption reads an integer from user, from a specific number of options,
+     * previously set by current's menu
+     * @return
+     */
     public int readOption(){
 
         int answer;
