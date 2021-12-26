@@ -10,6 +10,7 @@ import BusinessLayer.Workers.Technician;
 import BusinessLayer.WorkersFacade;
 import DataBase.ClientDAO;
 import DataBase.ExpressServicesDAO;
+import DataBase.ProcessingCenterDAO;
 import DataBase.WorkersDAO;
 import UI.Book;
 import UI.Menu;
@@ -110,6 +111,13 @@ public class Main {
         expresslist.add(er6);expresslist.add(er7);
         ExpressServicesDAO expressservicesdao = new ExpressServicesDAO(expresslist);
         System.out.println("Added " + expressservicesdao.size() + "express repair services\n\n");
+
+
+        Budget budget1 = new Budget("999000999", new Equipment("Forno","999000999","counter1"));
+        Budget budget2 = new Budget("999000999", new Equipment("Forno2","999000999","counter2"));
+        ProcessingCenterDAO processingCenterDAO = new ProcessingCenterDAO();
+        processingCenterDAO.add(budget1);processingCenterDAO.add(budget2);
+        System.out.println(processingCenterDAO.size());
 
 
         // debug purposes only------

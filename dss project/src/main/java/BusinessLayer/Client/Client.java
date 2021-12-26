@@ -71,10 +71,10 @@ public class Client implements Serializable {
         StringBuilder sb = new StringBuilder();
         sb.append("[Client] Name:\"")
                 .append(this.name)
-                .append(" ");
+                .append("\" ");
         sb.append("Nif:\"")
                 .append(this.nif)
-                .append(" ");
+                .append("\" ");
         sb.append("email:\"")
                 .append(this.email)
                 .append("\" ");

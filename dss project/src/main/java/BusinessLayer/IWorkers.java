@@ -5,6 +5,8 @@ import BusinessLayer.Services.Service;
 import BusinessLayer.Workers.Hierarchy;
 import DataBase.ClientDAO;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Map;
 
 public interface IWorkers {
@@ -29,7 +31,7 @@ public interface IWorkers {
     boolean hasWorkers(Hierarchy h);
 
     boolean registerExpressService();
-    boolean registerBudgetRequest(Service s);
+    boolean registerBudgetRequest(Service service);
 
     //void consultExpressService();
     void consultExpressServices();
@@ -44,5 +46,8 @@ public interface IWorkers {
     boolean login();
     void startSystem();
     void exitSystem();
+
+    void save();
+    WorkersFacade load() throws IOException, ClassNotFoundException;
 
 }

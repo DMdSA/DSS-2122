@@ -120,6 +120,13 @@ public class ProcessingCenterDAO {
         return false;
     }
 
+    public Map<UUID,Budget> get_by_state(BudgetStatus s){
+        return budgets.get(s);
+    }
+
+    public int size(){
+        return budgets.get(BudgetStatus.WITHOUT_BUDGET).size();
+    }
 
 
 }

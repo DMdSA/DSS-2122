@@ -2,8 +2,12 @@ package UI;
 
 
 import BusinessLayer.Client.Client;
+import BusinessLayer.Workers.Hierarchy;
+import BusinessLayer.Workers.Worker;
 import DataBase.ClientDAO;
+import DataBase.WorkersDAO;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -27,7 +31,10 @@ public class Book {
         return ' ';
     }
 
-    // (object o, int(1-clients, 2-workers, etc)
+    /**
+     * Book that shows system's clients
+     * @param clients
+     */
     public static void show_clients(ClientDAO clients){
 
         int number = clients.getSize();
@@ -47,7 +54,45 @@ public class Book {
         // page 4 -> 18 - 23
 
         Map<String, Client> client_map = clients.get();
-        List<Client> list = client_map.values().stream().toList();
+        List<Object> list = Arrays.asList(client_map.values().stream().toList().toArray());
+        Show_book(list, number, index, original_per_page, per_page, n_pages);
+    }
+
+    /**
+     * Book that shows the list of workers from a specific hierarchy/type
+     * @param wdao
+     * @param h
+     */
+    public static void Show_Workers(WorkersDAO wdao, Hierarchy h){
+
+        Map<String, Worker> workers = wdao.get(h);
+
+        int number = workers.size();
+
+        int per_page = 6;
+        if(number <= per_page){
+            per_page = number;
+        }
+        int original_per_page = per_page;
+        int n_pages = (int)Math.ceil((double)number/per_page);
+        int index = 0;
+
+        List<Object> list = Arrays.asList(workers.values().stream().toList().toArray());
+        Show_book(list, number, index, original_per_page, per_page, n_pages);
+
+    }
+
+    /**
+     * Auxiliar function that controls the flow of the book
+     * @param list List of objects to be shown
+     * @param number Number of elements
+     * @param index Starting index of the book (0)
+     * @param original_per_page Starting number of elements per page
+     * @param per_page Number of per page elements
+     * @param n_pages Number of pages of the book
+     */
+    private static void Show_book(List<Object> list, int number, int index, int original_per_page, int per_page, int n_pages){
+
         int current_page = 1;
 
         while(true) {
@@ -55,10 +100,8 @@ public class Book {
             int aux_index = index + per_page;
             // print dos objetos
             for (; index < aux_index; index++) {
-
                 System.out.println(list.get(index));
             }
-
             // user help
             System.out.println("a - previous | d - next | c - leave | Page [" + current_page + "]/[" + n_pages + "]");
             char option = ' ';
@@ -67,7 +110,6 @@ public class Book {
             while (option != 'a' && option != 'd' && option != 'c') {
                 option = readOption();
             }
-
             // if "previous",
             if (option == 'a') {
 
@@ -110,12 +152,6 @@ public class Book {
             // Leave
             else return;
         }
-
-
-
-
-
     }
-
 
 }

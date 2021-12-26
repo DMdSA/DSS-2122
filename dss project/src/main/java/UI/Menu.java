@@ -1,5 +1,6 @@
 package UI;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -17,7 +18,7 @@ public class Menu {
      * Handler auxiliar interface
      */
     public interface Handler{
-        void execute();
+        void execute() throws IOException, ClassNotFoundException;
     }
 
     /**
@@ -125,7 +126,7 @@ public class Menu {
     }
 
 
-    public void run(){
+    public void run() throws IOException, ClassNotFoundException {
 
         int option;
 

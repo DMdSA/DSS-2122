@@ -1,12 +1,14 @@
 package UI;
-
 import BusinessLayer.Client.Client;
+import BusinessLayer.Equipments.Budget;
+import BusinessLayer.Equipments.BudgetStatus;
 import BusinessLayer.Services.Service;
 import BusinessLayer.Workers.Hierarchy;
-import BusinessLayer.Workers.Manager;
 import BusinessLayer.WorkersFacade;
-
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class ShopUI {
@@ -56,7 +58,7 @@ public class ShopUI {
     /**
      * Main run
      */
-    public void run(){
+    public void run() throws IOException, ClassNotFoundException {
 
         Menu introduction = new Menu("Miei Repair Center",
                 Arrays.asList(
@@ -71,7 +73,9 @@ public class ShopUI {
         this.mainMenu();
     }
 
-
+    /**
+     * Login Menu
+     */
     private void loginMenu(){
 
         Menu loginMenu = new Menu("Login - Welcome",
@@ -87,7 +91,7 @@ public class ShopUI {
      * Main menu for user's interface, after login
      * It has a specific menu for each type of worker/hierarchy
      */
-    private void mainMenu(){
+    private void mainMenu() throws IOException, ClassNotFoundException {
         System.out.println();
 
         /**
@@ -102,16 +106,16 @@ public class ShopUI {
          */
          Menu CounterMenu = new Menu("Counter - [@user]",
                 Arrays.asList(
-                          "Exit"                                                // TODO
+                          "Exit"                                                // 0 TODO
                         , "Consult Client"                                      // 1
                         , "Register Client"                                     // 2
-                        , "Register Normal Service"                             // TODO
-                        , "Register Express Service"                            // TODO
-                        , "Consult Express Services"                            // TODO
-                        , "Consult Budget Request"                              // TODO
-                        , "Check Technician Availability"                       // TODO
-                        , "Save Registers"                                      // TODO
-                        , "Load registers"                                      // TODO
+                        , "Register Normal Service"                             // 3 TODO
+                        , "Register Express Service"                            // 4 TODO
+                        , "Consult Express Services"                            // 5 TODO
+                        , "Consult Budget Request"                              // 6 TODO
+                        , "Check Technician Availability"                       // 7 TODO
+                        , "Save Registers"                                      // 8
+                        , "Load registers"                                      // 9
                 ));
 
 
@@ -123,11 +127,13 @@ public class ShopUI {
          //CounterMenu.setHandler(0, this:: ?);
          CounterMenu.setHandler(1, this::consult_client);
          CounterMenu.setHandler(2, this:: RegisterClient);
-         //CounterMenu.setHandler(3, this:: ?);
+         CounterMenu.setHandler(3, this::RegisterNormalService);
          //CounterMenu.setHandler(4, this:: ?);
          //CounterMenu.setHandler(5, this:: ?);
-         //CounterMenu.setHandler(6, this:: ?);
+         //CounterMenu.setHandler(6, this:: ?); asd
          //CounterMenu.setHandler(7, this:: ?);
+        CounterMenu.setHandler(8, this::Save);
+        CounterMenu.setHandler(9, this::Load);
         CounterMenu.run();
         System.out.println();
 
@@ -136,12 +142,20 @@ public class ShopUI {
          */
         Menu TechnicianMenu = new Menu("Technician - [@user]",
                  Arrays.asList(
-                           "Exit"                                               // TODO
-                         , "Consult Budget Requests"                            // TODO
-                         , "Consult Express Requests"));                        // TODO
+                           "Exit"                                               // 0 TODO
+                         , "Consult Budget Requests"                            // 1 TODO
+                         , "Consult Express Requests"                           // 2 TODO
+                         , "Save"                                               // 3
+                         , "Load"                                               // 4
+                 ));
 
         TechnicianMenu.setPreCondition(1, ()->this.workers_facade.hasBudgetRequests());
         TechnicianMenu.setPreCondition(2, ()->this.workers_facade.hasExpressServices());
+
+        //TechnicianMenu.setHandler(1, ?);
+        //TechnicianMenu.setHandler(2, ?);
+        TechnicianMenu.setHandler(3, this::Save);
+        TechnicianMenu.setHandler(4, this::Load);
 
 
         /**
@@ -149,29 +163,35 @@ public class ShopUI {
          */
         Menu ManagerMenu = new Menu("Manager - [@user]",
                 Arrays.asList(
-                          "Exit"                                                // TODO
-                        , "Consult Client"                                      // 1
-                        , "Consult Normal Service"                              // TODO
-                        , "Consult Express Service"                             // TODO
-                        , "Consult Worker"                                      // TODO
+                          "Exit"                                                // 0 TODO
+                        , "Register Worker"                                     // 1 TODO
+                        , "Consult Client"                                      // 2
+                        , "Consult Normal Service"                              // 3 TODO
+                        , "Consult Express Service"                             // 4 TODO
+                        , "Consult Worker"                                      // 5
+                        , "Save"                                                // 6
+                        , "Load"                                                // 7
                 ));
-        ManagerMenu.setPreCondition(1, ()->this.workers_facade.hasClients());
-        ManagerMenu.setPreCondition(2, ()->this.workers_facade.hasBudgetRequests());
-        ManagerMenu.setPreCondition(3, ()->this.workers_facade.hasExpressServices());
-        ManagerMenu.setPreCondition(4, ()->this.workers_facade.hasWorkers());
+        ManagerMenu.setPreCondition(2, ()->this.workers_facade.hasClients());
+        ManagerMenu.setPreCondition(3, ()->this.workers_facade.hasBudgetRequests());
+        ManagerMenu.setPreCondition(4, ()->this.workers_facade.hasExpressServices());
+        ManagerMenu.setPreCondition(5, ()->this.workers_facade.hasWorkers());
 
         //ManagerMenu.setHandler(0,);
-        ManagerMenu.setHandler(1, this::consult_client);
-        //ManagerMenu.setHandler(2,);
+        //ManagerMenu.setHandler(1,);
+        ManagerMenu.setHandler(2, this::consult_client);
         //ManagerMenu.setHandler(3,);
         //ManagerMenu.setHandler(4,);
+        ManagerMenu.setHandler(5, this::ConsultWorker);
+        ManagerMenu.setHandler(6, this::Save);
+        ManagerMenu.setHandler(7, this::Load);
     }
 
 
     /**
      * Consult the list of existing clients
      */
-    private void consult_client(){
+    private void consult_client() throws IOException, ClassNotFoundException {
 
         /**
          * Em vez de 1º mostrar todos e depois dar a opcao de "cada", podia meter a listagem de todos como uma das opcoes do menu... TODO
@@ -179,21 +199,22 @@ public class ShopUI {
 
         // Prints a book of clients
         System.out.println("\n\n\n\n\n".repeat(10));
-        Book.show_clients(this.workers_facade.getClients());
-
         // shows the search client menu
         Menu ConsultClient = new Menu("Search Client",
                 Arrays.asList(
                           "Back"
+                        , "All Clients"
                         , "by Nif"
                         , "by Phone"));
 
         // depois de encontrado, podia haver um menu direto para "registar servico" ?
 
         ConsultClient.setHandler(0, this::mainMenu);
-        ConsultClient.setHandler(1, this::ConsultClientByNif);
-        ConsultClient.setHandler(2, this::ConsultClientByPhone);
+        ConsultClient.setHandler(1, () -> Book.show_clients(this.workers_facade.getClients()));
+        ConsultClient.setHandler(2, this::ConsultClientByNif);
+        ConsultClient.setHandler(3, this::ConsultClientByPhone);
         ConsultClient.run();
+        System.out.println("\n\n\n\n\n".repeat(10));
 
     }
 
@@ -260,7 +281,9 @@ public class ShopUI {
         }
     }
 
-
+    /**
+     * Registers a new normal service
+     */
     private void RegisterNormalService(){
 
         System.out.print("#> Nif:");
@@ -274,9 +297,144 @@ public class ShopUI {
 
         String equipment_name = this.getInput.nextLine();
 
-        this.workers_facade.registerBudgetRequest(new Service(nif, equipment_name, "counter1"));    //TODO CUIDADO
+        this.workers_facade.registerBudgetRequest(new Service(nif, equipment_name, "counter1"));    //TODO CUIDADO COUNTERID
         // TODO
+    }
 
+    /**
+     * Consults normal services
+     *
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    private void ConsultBudgetRequest() throws IOException, ClassNotFoundException {
+        System.out.println("\n\n\n\n\n".repeat(10));
+
+        // shows the search client menu
+        Menu ConsultBudget = new Menu("Search Budget",
+                Arrays.asList(
+                        "Back"
+                        , "by Status"
+                        , "by ClientID"));
+
+        // depois de encontrado, podia haver um menu direto para "registar servico" ?
+
+        ConsultBudget.setHandler(0, this::mainMenu);
+        ConsultBudget.setHandler(1, this::ConsultBudgetByStatus);
+        ConsultBudget.setHandler(2, this::ConsultBudgetByNif);
+        ConsultBudget.run();
+    }
+
+    /**
+     * Consults a budget by it's status
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    private void ConsultBudgetByStatus() throws IOException, ClassNotFoundException {
+        System.out.println("\n\n\n\n\n".repeat(10));
+        Menu ConsultStatus = new Menu("States",
+                Arrays.asList(
+                        "Back",
+                BudgetStatus.WITHOUT_BUDGET.toString(),
+                BudgetStatus.WAITING_APPROVAL.toString(),
+                BudgetStatus.DECLINED.toString(),
+                BudgetStatus.WAITING_REPAIR.toString(),
+                BudgetStatus.WAITING_PICKUP.toString(),
+                BudgetStatus.DELIVERED.toString(),
+                BudgetStatus.ARCHIVED.toString()));
+
+        ConsultStatus.setHandler(0,this::ConsultBudgetRequest);
+        ConsultStatus.run();
+        ConsultStatus.setHandler(1,()->ConsultBudget(BudgetStatus.WITHOUT_BUDGET));
+    }
+
+    /**
+     * Consult a budget by nif
+     */
+    private void ConsultBudgetByNif(){
+        // Leitura input
+        String nif = null;
+        nif = this.getInput.nextLine();
+
+        // Procura
+        List<Budget> budgets = new ArrayList<>();
+        budgets = this.workers_facade.getBudgetbyNif(nif);
+        if(budgets.size() != 0) {
+            for(int i = 0; i < budgets.size(); i++){
+                System.out.println("Got : " + budgets.get(i));
+            }
+        }
+        else
+            System.out.println("error: No Budgets with the specified Nif");
+    }
+
+    /**
+     * Consults a list of budgets by their status
+     * @param budgetStatus
+     */
+   private void ConsultBudget(BudgetStatus budgetStatus) {
+        List<Budget> budgets;
+        budgets = new ArrayList<>(workers_facade.getBudgetRequestsbyStatus(budgetStatus).values()); //TODO CLONE!!!!!!!
+        //TODO BOOK DMA yey
+    }
+
+
+    /**
+     * Saves the current system state to an object file
+     */
+    private void Save(){
+        this.workers_facade.save();
+        System.out.println("\n\n\n\n\n".repeat(10));
+    }
+
+    /**
+     * Loads a system state from an object file
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    private void Load() throws IOException, ClassNotFoundException {
+        this.workers_facade = this.workers_facade.load();
+        System.out.println("\n\n\n\n\n".repeat(10));
+    }
+
+
+    /**
+     * Menu to consult workers on the system
+     */
+    private void ConsultWorker(){
+
+        Menu worker_type = new Menu("Search Workers",
+                Arrays.asList(
+                          "Back"
+                        , "Counter Workers"
+                        , "Counter Worker by user"
+                        , "Technicians"
+                        , "Technician by user"
+                ));
+
+        //worker_type.setHandler(0, this::ManagerMenu);
+        worker_type.setHandler(1, () -> Book.Show_Workers(this.workers_facade.getWorkers(), Hierarchy.COUNTER));
+        worker_type.setHandler(2, ()-> PrintWorker(Hierarchy.COUNTER));
+        worker_type.setHandler(3, () -> Book.Show_Workers(this.workers_facade.getWorkers(), Hierarchy.TECHNICIAN));
+        worker_type.setHandler(4, () -> PrintWorker(Hierarchy.TECHNICIAN));
+    }
+
+
+    /**
+     * Prints a requested user by it's hierarchy, asking for his user
+     * @param h
+     */
+    private void PrintWorker(Hierarchy h){
+
+        String user = this.getInput.nextLine();
+
+        // If the worker exists, it is printed
+        if(this.workers_facade.hasWorker(h, user)){
+            System.out.println("Got worker: " + this.workers_facade.getWorker(h, user));
+        }
+        else{
+            System.out.println("error: That worker is not registered");
+        }
     }
 
 }

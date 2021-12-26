@@ -30,6 +30,12 @@ public class WorkersDAO implements Serializable {
         // TODO TODO TODO
     }
 
+
+    public boolean hasWorker(Hierarchy h, String user){
+        return this.workersDAO.get(h).containsKey(user);
+    }
+
+
     /**
      * Gets the number of workers saved on system
      * @return
