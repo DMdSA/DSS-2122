@@ -1,6 +1,8 @@
 package BusinessLayer.Client;
 
-public class Client {
+import java.io.Serializable;
+
+public class Client implements Serializable {
 
     /**
      * Instance variables
@@ -72,6 +74,9 @@ public class Client {
                 .append(" ");
         sb.append("email:\"")
                 .append(this.email)
+                .append("\" ");
+        sb.append("phone:\"")
+                .append(this.phone_number)
                 .append("\"");
 
         return sb.toString();

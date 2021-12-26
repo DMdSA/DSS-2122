@@ -66,7 +66,7 @@ public class Menu {
     }
 
 
-    public void option(String option, PreCondition pc, Handler h){
+    public void addOption(String option, PreCondition pc, Handler h){
         this.options.add(option);
         this.availableOptions.add(pc);
         this.handlers.add(h);
@@ -122,6 +122,25 @@ public class Menu {
              answer = -1;
          }
          return answer;
+    }
+
+
+    public void run(){
+
+        int option;
+
+        do{
+            this.show();
+            option = this.readOption();
+            if(option > 0 && !this.availableOptions.get(option).validate())
+                System.out.println("Unavailable option. Try again.");
+            else if(option > 0){
+
+                this.handlers.get(option).execute();
+            }
+        } while(option != 0);
+
+        System.out.println("\n\n\n\n\n".repeat(10));
     }
 
 }

@@ -25,6 +25,16 @@ public class Manager extends Worker{
         this.setHierarchy(Hierarchy.MANAGER);
     }
 
+    public Manager(Manager m){
+
+        super(m);
+        this.setHierarchy(m.getHierarchy());
+    }
+
+    public Manager clone(){
+        return new Manager(this);
+    }
+
     /**
      * Getters
      */

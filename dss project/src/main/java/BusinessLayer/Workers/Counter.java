@@ -35,6 +35,16 @@ public class Counter extends Worker{
         this.statistics = new HashMap<>();
     }
 
+    public Counter(Counter c){
+        super(c);
+        this.setHierarchy(c.getHierarchy());
+        this.statistics = c.getStatistics();
+    }
+
+    public Counter clone(){
+        return new Counter(this);
+    }
+
     /**
      * Getters
      */

@@ -1,6 +1,8 @@
 package BusinessLayer.Workers;
 
-public class Worker {
+import java.io.Serializable;
+
+public class Worker implements Serializable {
 
     /**---------------------
      * Instance Variables---
@@ -43,6 +45,21 @@ public class Worker {
         this.phone = phone;
         this.hierarchy = null;
     }
+
+
+    public Worker(Worker w){
+        this.user = w.getUser();
+        this.pass = w.getPass();
+        this.name = w.getName();
+        this.nif = w.getNif();
+        this.phone = w.getPhone();
+        this.hierarchy = w.getHierarchy();
+    }
+
+    public Worker clone(){
+        return new Worker(this);
+    }
+
 
     /**
      * Getters

@@ -1,6 +1,8 @@
 package BusinessLayer.Workers;
 
-public class Technician extends Worker{
+import java.io.Serializable;
+
+public class Technician extends Worker {
 
     /**
      * Instance variables
@@ -28,6 +30,17 @@ public class Technician extends Worker{
         this.setHierarchy(Hierarchy.TECHNICIAN);
         this.isAvailable = true;
     }
+
+    public Technician(Technician t){
+        super(t);
+        this.setHierarchy(t.getHierarchy());
+        this.isAvailable = t.getAvailability();
+    }
+
+    public Technician clone(){
+        return new Technician(this);
+    }
+
 
     /**
      * Getters

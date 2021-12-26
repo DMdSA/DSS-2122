@@ -3,18 +3,23 @@ package DataBase;
 import BusinessLayer.Workers.Hierarchy;
 import BusinessLayer.Workers.Worker;
 
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WorkersDAO {
+public class WorkersDAO implements Serializable {
 
     /**
      * Instance Variables
      */
     Map<Hierarchy, Map<String, Worker>> workersDAO;
+    private static final String path = "C:\\Users\\diogo\\Ambiente de Trabalho\\UNIVERSIDADE MINHO\\3ano\\1semestre\\Desenvolvimento Sistemas Software\\Trabalho Pratico\\dss project\\src\\main\\java\\DataBase\\workers";
 
     /**
      * Constructor
+     *
+     * For each hierarchy in system,
+     * it creates a Map which maps each worker's username to it's object
      */
     public WorkersDAO(){
         this.workersDAO = new HashMap<>();
@@ -26,9 +31,25 @@ public class WorkersDAO {
     }
 
     /**
-     * add a new worker
-     * @param w
+     * Gets the number of workers saved on system
      * @return
+     */
+    public int getSize(){
+
+        int counter = 0;
+
+        for(Map.Entry<Hierarchy, Map<String,Worker>> e : this.workersDAO.entrySet()){
+
+            counter += e.getValue().size();
+        }
+        return counter;
+    }
+
+
+    /**
+     * Add a new worker to database
+     * @param w worker being added
+     * @return true if the worker is new and successfully added
      */
     public boolean add(Worker w){
 
@@ -36,22 +57,17 @@ public class WorkersDAO {
 
         // Se já o tiver na base
         if(this.workersDAO.get(h).containsKey(w.getUser())){
-
-            // Se forem exatamente iguais, não foi necessário adicionar
-            if(w.equals(this.workersDAO.get(h).get(w.getUser()))){
-                return false;
-            }
+            return false;
         }
-
-        // se não forem iguais, adicionar
+        // Se for novo, adicionar
         this.workersDAO.get(h).put(w.getUser(), w); //clone?
         return true;
     }
 
     /**
-     * remove a worker
-     * @param w
-     * @return
+     * Remove an existing worker
+     * @param w worker being removed
+     * @return true, if he existed and has been removed
      */
     public boolean remove(Worker w){
 
@@ -67,9 +83,9 @@ public class WorkersDAO {
     }
 
     /**
-     * get a worker by his hierarchy and user
-     * @param h
-     * @param user
+     * Get an existing worker by his hierarchy and user
+     * @param h hierarchy
+     * @param user worker's username
      * @return
      */
     public Worker get(Hierarchy h, String user){
@@ -92,9 +108,9 @@ public class WorkersDAO {
 
 
     /**
-     * update a worker
-     * @param w
-     * @return
+     * Updates an existing worker
+     * @param w Worker object
+     * @return if the worker existed and has been updated
      */
     public boolean update(Worker w){
 
@@ -115,8 +131,40 @@ public class WorkersDAO {
 
         // Se não existia na base, deve ser adicionado, não alterado
         return false;
-
     }
 
+    /**
+     * Writes a WorkersDAO object to a file
+     * path is specified in object's instance variables
+     */
+    public void WriteObjectToFile() {
+        try {
+            FileOutputStream fileOut = new FileOutputStream(path);
+            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
+            objectOut.writeObject(this);
+            objectOut.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Loads an WorkersDAO object from an object file
+     * @return WorkersDAO object, or null
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    public static WorkersDAO loadFileToObject() throws IOException, ClassNotFoundException {
+
+        FileInputStream fileStream = new FileInputStream(path);
+        ObjectInputStream input = new ObjectInputStream(fileStream);
+
+        Object o = input.readObject();
+
+        if(o instanceof WorkersDAO){
+            return (WorkersDAO) o;
+        }
+        return null;
+    }
 
 }

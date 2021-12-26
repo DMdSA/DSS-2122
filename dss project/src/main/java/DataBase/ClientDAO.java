@@ -18,6 +18,9 @@ public class ClientDAO implements Serializable {
 
     /**
      * Constructor
+     *
+     * This constructor creates a Map<String, Client> which maps each client's ID,
+     * being "nif" the ID, to each client's object
      */
     public ClientDAO(){
         this.clients = new HashMap<>();
@@ -25,9 +28,27 @@ public class ClientDAO implements Serializable {
     }
 
 
+    public ClientDAO(ClientDAO dao){
+        this.clients = dao.get();
+    }
+
+    public ClientDAO clone(){
+        return new ClientDAO(this);
+    }
+
+
     /**
-     * Get a client by his nif
-     * @param nif
+     * Get the number of clients saved on system
+     * @return
+     */
+    public int getSize(){
+        return this.clients.size();
+    }
+
+
+    /**
+     * Get a client by his id
+     * @param nif Client's nif and ID
      * @return
      */
     public Client getByNif(String nif){
@@ -50,7 +71,13 @@ public class ClientDAO implements Serializable {
      * Get all clients
      */
     public Map<String, Client> get(){
-        return this.clients;
+
+        Map<String, Client> answer = new HashMap<>();
+
+        for(Map.Entry<String, Client> e : this.clients.entrySet())
+            answer.put(e.getKey(),e.getValue().clone());
+
+        return answer;
         // TODO clone??
     }
 
@@ -58,7 +85,7 @@ public class ClientDAO implements Serializable {
     /**
      * Add a new client
      * @param client
-     * @return
+     * @return true if it is a new client and successfully added
      */
     public boolean add(Client client){
 
@@ -74,8 +101,12 @@ public class ClientDAO implements Serializable {
     }
 
     /**
-     * Remove a client
-     * @param NIF
+     * Remove an existing client
+     * @param NIF Client's id
+     *
+     * If a client with given id is found, it is removed.
+     * Client's nif used as his ID
+     *
      * @return
      */
     public boolean remove(String NIF){
@@ -90,8 +121,12 @@ public class ClientDAO implements Serializable {
     }
 
     /**
-     * Update a client
-     * @param client
+     * Update an existing client
+     * @param client client being updated
+     *
+     * Uses client's nif to see if he already exists in database.
+     * If an occurrence is found, it is updated.
+     *
      * @return
      */
     public boolean update(Client client){
@@ -105,8 +140,9 @@ public class ClientDAO implements Serializable {
     }
 
 
-
-    /*
+    /**
+     * Writes a ClientDAO to an object file
+     */
     public void WriteObjectToFile() {
         try {
             FileOutputStream fileOut = new FileOutputStream(path);
@@ -120,9 +156,13 @@ public class ClientDAO implements Serializable {
     }
 
 
-    public ClientDAO loadFileToObject() throws IOException, ClassNotFoundException {
-
-        this.clients = new HashMap<>();
+    /**
+     * Tries to load a ClientDAO object from an object file
+     * @return ClientDAO, if found, null otherwise
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    public static ClientDAO loadFileToObject() throws IOException, ClassNotFoundException {
 
         FileInputStream fileStream = new FileInputStream(path);
         ObjectInputStream input = new ObjectInputStream(fileStream);
@@ -134,6 +174,5 @@ public class ClientDAO implements Serializable {
         }
         return null;
     }
-    */
 
 }

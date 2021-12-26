@@ -6,17 +6,22 @@ import BusinessLayer.Workers.Counter;
 import BusinessLayer.Workers.Hierarchy;
 import BusinessLayer.Workers.Manager;
 import BusinessLayer.Workers.Technician;
+import BusinessLayer.WorkersFacade;
 import DataBase.ClientDAO;
 import DataBase.WorkersDAO;
+import UI.Book;
 import UI.Menu;
+import UI.ShopUI;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.Map;
 
 public class Main {
 
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
 
 
         Counter counter1 = new Counter("counter1", "counter1pass", "diogo", "111000111000", "918883276");
@@ -43,6 +48,9 @@ public class Main {
         workersdatabase.add(technician1);workersdatabase.add(technician2);workersdatabase.add(technician3);workersdatabase.add(technician4);workersdatabase.add(technician5);
         workersdatabase.add(manager1);workersdatabase.add(manager2);workersdatabase.add(manager3);workersdatabase.add(manager4);workersdatabase.add(manager5);
 
+        //workersdatabase.WriteObjectToFile();
+        //WorkersDAO workersbase2 = WorkersDAO.loadFileToObject();
+
         System.out.println("Added " + workersdatabase.get(Hierarchy.COUNTER).size() + " counter workers");
         System.out.println("Added " + workersdatabase.get(Hierarchy.TECHNICIAN).size() + " techs");
         System.out.println("Added " + workersdatabase.get(Hierarchy.MANAGER).size() + " managers");
@@ -53,40 +61,32 @@ public class Main {
         Client client3 = new Client("joel araujo", "122122122", "joel@gmail.com");
         Client client4 = new Client("barbara", "211211211", "barbara@gmail.com");
         Client client5 = new Client("suricata", "133133133", "suricata@gmail.com");
+        Client client6 = new Client("cliente6", "19993123", "cliente6@gmail.com");
+        Client client7 = new Client("cliente7", "441312334", "cliente7@gmail.com");
 
         ClientDAO clientsdatabase = new ClientDAO();
         clientsdatabase.add(client1);clientsdatabase.add(client2);clientsdatabase.add(client3);clientsdatabase.add(client4);clientsdatabase.add(client5);
+        clientsdatabase.add(client6);clientsdatabase.add(client7);
         System.out.println("Added " + clientsdatabase.get().size() + " clients\n\n");
+
+        //clientsdatabase.WriteObjectToFile();
+        //clients.database.loadFileToObject();
+
+        // debug purposes only------
+        WorkersFacade wf = new WorkersFacade(clientsdatabase, workersdatabase, null);
+        ShopUI shop = new ShopUI(wf);
+        // ------------------------
+        shop.run();
 
         /**
          * Menus examples ------\()/--------
          */
 
-        Menu introduction = new Menu("Miei Repair Center", Arrays.asList("Program developed by group xx", "Version 1.0", "2021/2022", "UMINHO"));
-        introduction.show();System.out.println("\n");
-
-        Menu loginMenu = new Menu("Login - Welcome", Arrays.asList("Exit", "Login", "Credits"));
-        loginMenu.show();System.out.println("\n");
-
-        // era fixe aqui aparecer o user do counter v
-        Menu CounterMenu = new Menu("Counter - [@user]",
-                Arrays.asList("Exit", "Consult Client", "Register Client", "Register Normal Service"
-                        , "Register Express Service", "Consult Express Services", "Consult Budget Request"
-                        , "Check Technician Availability"));
-        CounterMenu.show();
-        /**
-         * Pre - Conditions
-         * 0 -> none
-         * 1 -> logged in + have > 0 clients
-         * 2 -> logged in
-         * 3 -> logged in + > 0 technicians + > 0 clients
-         * 4 -> logged in + > 0 technicians + > 0 clients
-         * 5 -> logged in + have > 0 express service
-         * 6 -> logged in + have > 0 budget request (normal service)
-         * 7 -> logged in + have > 0 technicians
-         */
-
-        Menu CounterMenuConsultClient = new Menu("Search Client", Arrays.asList("Back", "byNif", "byPhone"));
+        Menu CounterMenuConsultClient = new Menu("Search Client",
+                Arrays.asList(
+                          "Back"
+                        , "byNif"
+                        , "byPhone"));
         /**
          * Pre - Conditions
          * 0 -> none
@@ -94,8 +94,11 @@ public class Main {
          * 2 -> none
          */
 
-        Menu CounterMenuConsultBudgetRequest = new Menu("Buget Request"
-                , Arrays.asList("Back", "by Client", "by ID"));
+        Menu CounterMenuConsultBudgetRequest = new Menu("Buget Request",
+                Arrays.asList(
+                          "Back"
+                        , "by Client"
+                        , "by ID"));
         /**
          * Pre - Conditions
          * 0 -> none
@@ -104,8 +107,11 @@ public class Main {
          */
 
 
-        Menu TechnicianMenu = new Menu("Technician - [@user]"
-                , Arrays.asList("Exit", "Consult Budget Requests", "Consult Express Requests"));
+        Menu TechnicianMenu = new Menu("Technician - [@user]",
+                Arrays.asList(
+                          "Exit"
+                        , "Consult Budget Requests"
+                        , "Consult Express Requests"));
         /**
          * Pre - Conditions
          * 0 -> none
@@ -113,8 +119,12 @@ public class Main {
          * 2 -> login + > 0 express requests (express service)
          */
 
-        Menu TechMenuBudgetRequests = new Menu("Tech - [@user] - [Budget Requests]"
-                , Arrays.asList("Back", "by ID", "by Client", "Latest"));
+        Menu TechMenuBudgetRequests = new Menu("Tech - [@user] - [Budget Requests]",
+                Arrays.asList(
+                          "Back"
+                        , "by ID"
+                        , "by Client"
+                        , "Latest"));
         /**
          * Pre - Conditions
          * 0 -> none
@@ -122,7 +132,5 @@ public class Main {
          * 2 -> none
          * 3 -> none
          */
-
-
     }
 }
