@@ -111,6 +111,20 @@ public class WorkersDAO implements Serializable {
         // TODO clone???
     }
 
+    public Worker get(String user){
+        if(workersDAO.get(Hierarchy.COUNTER).containsKey(user)){
+            return workersDAO.get(Hierarchy.COUNTER).get(user);
+        }
+        else if(workersDAO.get(Hierarchy.TECHNICIAN).containsKey(user)){
+            return workersDAO.get(Hierarchy.TECHNICIAN).get(user);
+        }
+        else if(workersDAO.get(Hierarchy.MANAGER).containsKey(user)){
+            return workersDAO.get(Hierarchy.MANAGER).get(user);
+        }
+        return null;
+    }
+
+
 
 
     /**

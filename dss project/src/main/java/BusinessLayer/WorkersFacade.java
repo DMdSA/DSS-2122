@@ -171,6 +171,10 @@ public class WorkersFacade implements IWorkers, Serializable {
         return (this.workers_dao.get(h).size() > 0);
     }
 
+    public Worker hasWorker(String user){
+        return workers_dao.get(user);
+    }
+
     /**
      * Registers a new express service
      * @return

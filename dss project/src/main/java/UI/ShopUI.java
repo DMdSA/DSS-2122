@@ -4,6 +4,7 @@ import BusinessLayer.Equipments.Budget;
 import BusinessLayer.Equipments.BudgetStatus;
 import BusinessLayer.Services.Service;
 import BusinessLayer.Workers.Hierarchy;
+import BusinessLayer.Workers.Worker;
 import BusinessLayer.WorkersFacade;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public class ShopUI {
     private Scanner getInput;
 
     private String username;
+    private Hierarchy hierarchy_logged;
 
 
     /**
@@ -60,31 +62,75 @@ public class ShopUI {
      */
     public void run() throws IOException, ClassNotFoundException {
 
+        this.loginMenu();
+
+        //this.mainMenu();
+    }
+
+    private void introduction(){
+        System.out.println("\n\n\n\n\n".repeat(10));
         Menu introduction = new Menu("Miei Repair Center",
                 Arrays.asList(
-                          "Program developed by group xx"
+                        "Program developed by group xx"
                         , "Version 1.0"
                         , "2021/2022"
                         , "UMINHO"));
         introduction.show();
-
-        // login ?? TODO
-
-        this.mainMenu();
+        pressAnyKeyToContinue();
     }
 
-    /**
-     * Login Menu
-     */
-    private void loginMenu(){
 
+    private void loginMenu() throws IOException, ClassNotFoundException {
+        System.out.println("\n\n\n\n\n".repeat(10));
         Menu loginMenu = new Menu("Login - Welcome",
                 Arrays.asList(
-                          "Exit"
+                        "Exit"
                         , "Login"
                         , "Credits"));
-        loginMenu.show();
-        System.out.println();
+        loginMenu.setHandler(0,this::exit);
+        loginMenu.setHandler(1,this::login);
+        loginMenu.setHandler(2,this::introduction);
+        loginMenu.run();
+    }
+
+    private void pressAnyKeyToContinue()
+    {
+        System.out.println("Press Enter key to continue...");
+        try
+        {
+            System.in.read();
+        }
+        catch(Exception ignored)
+        {}
+    }
+
+    private void login() throws IOException, ClassNotFoundException {
+        System.out.println("\n\n\n\n\n".repeat(10));
+        System.out.println("Username:"); //Debug
+        String user = getInput.nextLine();
+        System.out.println("Password");
+        String password = getInput.nextLine();
+        Worker aux = workers_facade.hasWorker(user);
+        if(aux != null){
+            if(aux.getPass().equals(password)){
+                this.logged_in = true;
+                this.username = aux.getUser();
+                this.hierarchy_logged = aux.getHierarchy();
+                System.out.println("Welcome " + aux.getHierarchy());
+                this.mainMenu();
+
+            }
+            else{
+                System.out.println("Wrong Credentials");
+                pressAnyKeyToContinue();
+                loginMenu();
+            }
+        }
+        else{
+            System.out.println("Wrong Credentials");
+            pressAnyKeyToContinue();
+            loginMenu();
+        }
     }
 
     /**
@@ -124,7 +170,7 @@ public class ShopUI {
          CounterMenu.setPreCondition(6, ()->this.workers_facade.hasBudgetRequests());
          CounterMenu.setPreCondition(7, ()->this.workers_facade.hasWorkers(Hierarchy.TECHNICIAN));
 
-         //CounterMenu.setHandler(0, this:: ?);
+        CounterMenu.setHandler(0, this::exit);
          CounterMenu.setHandler(1, this::consult_client);
          CounterMenu.setHandler(2, this:: RegisterClient);
          CounterMenu.setHandler(3, this::RegisterNormalService);
@@ -134,8 +180,10 @@ public class ShopUI {
          //CounterMenu.setHandler(7, this:: ?);
         CounterMenu.setHandler(8, this::Save);
         CounterMenu.setHandler(9, this::Load);
-        CounterMenu.run();
-        System.out.println();
+        if(hierarchy_logged == Hierarchy.COUNTER) {
+            CounterMenu.run();
+            System.out.println();
+        }
 
         /**
          * TECHNICIAN - MENU
@@ -156,6 +204,10 @@ public class ShopUI {
         //TechnicianMenu.setHandler(2, ?);
         TechnicianMenu.setHandler(3, this::Save);
         TechnicianMenu.setHandler(4, this::Load);
+        if(hierarchy_logged == Hierarchy.TECHNICIAN){
+            TechnicianMenu.run();
+            System.out.println();
+        }
 
 
         /**
@@ -185,8 +237,16 @@ public class ShopUI {
         ManagerMenu.setHandler(5, this::ConsultWorker);
         ManagerMenu.setHandler(6, this::Save);
         ManagerMenu.setHandler(7, this::Load);
+        if(hierarchy_logged == Hierarchy.MANAGER){
+            ManagerMenu.run();
+            System.out.println();
+        }
     }
 
+
+    private void exit(){
+        exit();
+    }
 
     /**
      * Consult the list of existing clients
