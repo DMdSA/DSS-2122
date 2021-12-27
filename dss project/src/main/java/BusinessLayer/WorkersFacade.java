@@ -14,6 +14,7 @@ import DataBase.WorkersDAO;
 import org.javatuples.Triplet;
 
 import java.io.*;
+import java.nio.file.Paths;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -26,7 +27,10 @@ public class WorkersFacade implements IWorkers, Serializable {
     private WorkersDAO workers_dao;
     private ProcessingCenterDAO processingCenter_dao;
     private ExpressServicesDAO expressServices_dao;
-    private static final String path = "C:\\Users\\diogo\\Ambiente de Trabalho\\UNIVERSIDADE MINHO\\3ano\\1semestre\\Desenvolvimento Sistemas Software\\Trabalho Pratico\\dss project\\src\\main\\java\\DataBase\\workers_facade";
+    private static final String path = new String(Paths.get("").toAbsolutePath().toString()
+            +File.separator +"src" + File.separator + "main" +File.separator
+            + "java" + File.separator + "DataBase" + File.separator
+            + "FACADE_DB");
 
 
     public WorkersFacade() throws IOException, ClassNotFoundException {
@@ -139,6 +143,13 @@ public class WorkersFacade implements IWorkers, Serializable {
      */
 
 
+    public boolean updateDeliveryCounter(String username, String clientID){
+        Counter c = (Counter) this.workers_dao.get(Hierarchy.COUNTER, username);
+        c.updateEntregas(clientID);
+        return this.workers_dao.update(c);
+    }
+
+
     public Worker hasWorker(String user, String pass){
 
         return this.workers_dao.confirmWorker(user, pass);
@@ -194,12 +205,28 @@ public class WorkersFacade implements IWorkers, Serializable {
         return false;
     }
 
-
+    /**
+     * Updates a budget
+     * @param b
+     * @param new_price
+     * @param new_passos
+     * @param new_budgetStatus
+     *
+     * If the new budgetStatus is equal to the previous version, it only updates the remaining aspects of the object
+     * Otherwise, it will remove it from its previous line of BudgetStatus and add it to the new one
+     *
+     */
     public void update_budget(Budget b, double new_price, List<Triplet<String, LocalTime, Double>> new_passos, BudgetStatus new_budgetStatus){
-        processingCenter_dao.get(b.getBudgetID()).setFinalPrice(new_price);
-        processingCenter_dao.get(b.getBudgetID()).setTodo(new_passos);
-        processingCenter_dao.get(b.getBudgetID()).setStatus(new_budgetStatus);
+
+        b.setFinalPrice(new_price);
+        b.setTodo(new_passos);
+
+        if(b.getStatus().equals(new_budgetStatus)){
+            processingCenter_dao.update(b);
+        }
+        processingCenter_dao.update(b, new_budgetStatus);
     }
+
 
     public void view_passos(Budget b){ //Debug
         Budget aux = processingCenter_dao.get(b.getBudgetID());
@@ -225,13 +252,26 @@ public class WorkersFacade implements IWorkers, Serializable {
         if(flag) {
             if (this.workers_dao.get(Hierarchy.COUNTER).containsKey(service.getClientId())) {
                 Counter c = (Counter) this.workers_dao.get(Hierarchy.COUNTER, service.getEquipment().counterResponsible());
-                c.updateRececoes(this.clients_dao.getByNif(service.getClientId()));
+                c.updateRececoes(service.getClientId());
                 this.workers_dao.update(c);
             }
             return true;
         }
         return false;
     }
+
+    public boolean addBudget(Budget b){
+
+        return this.processingCenter_dao.add(b);
+    }
+
+
+    public boolean removeBudget(Budget b){
+
+        return this.processingCenter_dao.remove(b);
+    }
+
+
 
     /**
      * Get a budget by it's client's ID/NIF
@@ -305,10 +345,9 @@ public class WorkersFacade implements IWorkers, Serializable {
     }
 
 
-
     @Override
-    public boolean updateBudgetStatus() {
-        return false;
+    public boolean updateBudgetStatus(Budget b, BudgetStatus bs) {
+        return this.processingCenter_dao.update(b, bs);
     }
 
     @Override

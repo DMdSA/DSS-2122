@@ -11,7 +11,7 @@ public class Counter extends Worker{
     /**
      * Instance variables
      */
-    private Map<Client, Pair<Integer, Integer>> statistics;
+    private Map<String, Pair<Integer, Integer>> statistics;
 
     /**
      * Constructors
@@ -48,57 +48,51 @@ public class Counter extends Worker{
     /**
      * Getters
      */
-    public Map<Client, Pair<Integer,Integer>> getStatistics(){
+    public Map<String, Pair<Integer,Integer>> getStatistics(){
 
-        Map<Client,Pair<Integer,Integer>> answer = new HashMap<>();
-
-        for(Map.Entry<Client,Pair<Integer,Integer>> e : this.statistics.entrySet()){
-
-            answer.put(e.getKey().clone(), e.getValue());
-        }
-        return answer;
+        return new HashMap<>(this.statistics);
     }
 
 
     /**
      * Atualiza, em +1, o n.º de receções realizadas
-     * @param c
+     * @param ClientID
      * @return
      */
-    public boolean updateRececoes(Client c){
+    public boolean updateRececoes(String ClientID){
 
         // Se já existia, atualizar
-        if(this.statistics.containsKey(c)){
+        if(this.statistics.containsKey(ClientID)){
 
-            int previous = this.statistics.get(c).getValue0();
+            int previous = this.statistics.get(ClientID).getValue0();
 
-            this.statistics.put(c, new Pair<>(previous+1, this.statistics.get(c).getValue1()));
+            this.statistics.put(ClientID, new Pair<>(previous+1, this.statistics.get(ClientID).getValue1()));
             return true;
         }
 
         // Se não existia, acrescentar um novo record
-        this.statistics.put(c, new Pair<>(1, 0));
+        this.statistics.put(ClientID, new Pair<>(1, 0));
         return true;
     }
 
     /**
      * Atualiza, em +1, o n.º de entregas realizadas
-     * @param c
+     * @param clientID
      * @return
      */
-    public boolean updateEntregas(Client c){
+    public boolean updateEntregas(String clientID){
 
         // Se já existia, atualizar
-        if(this.statistics.containsKey(c)){
+        if(this.statistics.containsKey(clientID)){
 
-            int previous = this.statistics.get(c).getValue1();
+            int previous = this.statistics.get(clientID).getValue1();
 
-            this.statistics.put(c, new Pair<>(this.statistics.get(c).getValue0(), previous+1));
+            this.statistics.put(clientID, new Pair<>(this.statistics.get(clientID).getValue0(), previous+1));
             return true;
         }
 
         // Se não existia, acrescentar um novo record
-        this.statistics.put(c, new Pair<>(0, 1));
+        this.statistics.put(clientID, new Pair<>(0, 1));
         return true;
     }
 

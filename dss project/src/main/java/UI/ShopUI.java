@@ -155,24 +155,26 @@ public class ShopUI {
                         , "Available Express Services"                          // 4
                         , "Consult Service Requests"                            // 5
                         , "Check Technician Availability"                       // 6 TODO
-                        , "Save Registers"                                      // 7
-                        , "Load registers"                                      // 8
+                        , "Payment"                                             // 7 todo
+                        , "Save Registers"                                      // 8
+                        , "Load registers"                                      // 9
                 ));
 
-         CounterMenu.setPreCondition(1, ()->this.workers_facade.hasClients());
-         CounterMenu.setPreCondition(4, ()->this.workers_facade.hasExpressServices());
-         CounterMenu.setPreCondition(5, ()->this.workers_facade.hasBudgetRequests());
-         CounterMenu.setPreCondition(6, ()->this.workers_facade.hasWorkers(Hierarchy.TECHNICIAN));
+        CounterMenu.setPreCondition(1, ()->this.workers_facade.hasClients());
+        CounterMenu.setPreCondition(4, ()->this.workers_facade.hasExpressServices());
+        CounterMenu.setPreCondition(5, ()->this.workers_facade.hasBudgetRequests());
+        CounterMenu.setPreCondition(6, ()->this.workers_facade.hasWorkers(Hierarchy.TECHNICIAN));
 
          //CounterMenu.setHandler(0, this:: ?);
-         CounterMenu.setHandler(1, clientsUI::consult_client);
-         CounterMenu.setHandler(2, clientsUI::RegisterClient);
-         CounterMenu.setHandler(3, servicesUI::RegisterNormalService);
-         CounterMenu.setHandler(4, servicesUI::ConsultExpressServicesMenu);
-         CounterMenu.setHandler(5, servicesUI::ConsultBudgetRequest);
-         //CounterMenu.setHandler(6, this:: ?);
-        CounterMenu.setHandler(7, this::Save);
-        CounterMenu.setHandler(8, this::Load);
+        CounterMenu.setHandler(1, clientsUI::consult_client);
+        CounterMenu.setHandler(2, clientsUI::RegisterClient);
+        CounterMenu.setHandler(3, servicesUI::RegisterNormalService);
+        CounterMenu.setHandler(4, servicesUI::ConsultExpressServicesMenu);
+        CounterMenu.setHandler(5, servicesUI::ConsultBudgetRequest);
+        //CounterMenu.setHandler(6, this:: ?);
+        CounterMenu.setHandler(7, servicesUI::PaymentMenu);
+        CounterMenu.setHandler(8, this::Save);
+        CounterMenu.setHandler(9, this::Load);
         CounterMenu.run();
     }
 

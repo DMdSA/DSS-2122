@@ -1,5 +1,6 @@
 package DataBase;
 
+import BusinessLayer.Workers.Counter;
 import BusinessLayer.Workers.Hierarchy;
 import BusinessLayer.Workers.Worker;
 
@@ -141,17 +142,21 @@ public class WorkersDAO implements Serializable {
         // Se existir, pode atualizá-lo, ou não
         if(workers.containsKey(w.getUser())){
 
-            // Se forem iguais, não há necessidade de alterar
-            if(workers.get(w.getUser()).equals(w)){
-                return false;
-            }
-            // Se não forem iguais, deve ser atualizado
-            this.workersDAO.get(h).put(w.getUser(), w); // clone??
+            this.workersDAO.get(h).put(w.getUser(), w.clone()); // clone??
+            return true;
         }
-
         // Se não existia na base, deve ser adicionado, não alterado
         return false;
     }
+
+
+    public boolean updateDeliveries(Hierarchy h, String user, String clientID){
+        Counter c = (Counter)this.workersDAO.get(h).get(user);
+        c.updateEntregas(clientID);
+        return this.update(c);
+    }
+
+
 
     /**
      * Writes a WorkersDAO object to a file

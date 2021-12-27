@@ -1,6 +1,8 @@
 package BusinessLayer;
 
 import BusinessLayer.Client.Client;
+import BusinessLayer.Equipments.Budget;
+import BusinessLayer.Equipments.BudgetStatus;
 import BusinessLayer.Services.Service;
 import BusinessLayer.Workers.Hierarchy;
 import DataBase.ClientDAO;
@@ -40,7 +42,7 @@ public interface IWorkers {
 
     boolean consultBudgetRequests();
     boolean hasBudgetRequests();
-    boolean updateBudgetStatus();
+    boolean updateBudgetStatus(Budget b, BudgetStatus bs);
 
     boolean checkTechAvailability();
 

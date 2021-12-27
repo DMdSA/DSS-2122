@@ -124,6 +124,27 @@ public class ProcessingCenterDAO implements Serializable {
     }
 
     /**
+     * Updates the budget and transfers it to the new status
+     * @param b previous budget
+     * @param bs new budgetstatus
+     * @return
+     *
+     *
+     */
+    public boolean update(Budget b, BudgetStatus bs){
+
+        // remove previous version
+        BudgetStatus previous_bs = b.getStatus();
+        Map<UUID, Budget> previous = this.budgets.get(previous_bs);
+        previous.remove(b.getBudgetID());
+
+        // add the new one
+        b.setStatus(bs);
+        return this.add(b);
+    }
+
+
+    /**
      * Get the map of budgets associated with a specific budget status
      * @param s
      * @return
