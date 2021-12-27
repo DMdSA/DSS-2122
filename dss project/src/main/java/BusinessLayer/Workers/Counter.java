@@ -110,14 +110,17 @@ public class Counter extends Worker{
 
         StringBuilder sb = new StringBuilder();
 
-        sb.append("[CounterWorker] user:\"")
+        sb.append("[CounterWorker] user: \"")
                 .append(this.getUser())
-                .append("\", pass:\"")
+                .append("\",  pass: \"")
                 .append(this.getPass())
-                .append(", name:\"")
+                .append(",  name: \"")
                 .append(this.getName())
-                .append(", nif:\"")
-                .append(this.getNif());
+                .append(",  nif: \"")
+                .append(this.getNif())
+                .append(",  phone: \"")
+                .append(this.getPhone())
+                .append("\"");
 
         return sb.toString();
     }

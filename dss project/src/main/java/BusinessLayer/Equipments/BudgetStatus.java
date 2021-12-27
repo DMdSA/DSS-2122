@@ -1,6 +1,8 @@
 package BusinessLayer.Equipments;
 
-public enum BudgetStatus {
+import java.io.Serializable;
+
+public enum BudgetStatus implements Serializable {
 
     WITHOUT_BUDGET(1),
     WAITING_APPROVAL(2),

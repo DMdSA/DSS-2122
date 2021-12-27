@@ -3,9 +3,10 @@ package DataBase;
 import BusinessLayer.Equipments.Budget;
 import BusinessLayer.Equipments.BudgetStatus;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class ProcessingCenterDAO {
+public class ProcessingCenterDAO implements Serializable {
 
     /**
      * Instance Variables
@@ -15,6 +16,8 @@ public class ProcessingCenterDAO {
 
     /**
      * Constructor
+     * Prepares a Map<BudgetStatus, Map<UUID, Budget>, mapping each budget status
+     * to a new Map of unique ID's mapped to their associated budgets
      */
     public ProcessingCenterDAO(){
 
@@ -120,12 +123,35 @@ public class ProcessingCenterDAO {
         return false;
     }
 
+    /**
+     * Get the map of budgets associated with a specific budget status
+     * @param s
+     * @return
+     */
     public Map<UUID,Budget> get_by_state(BudgetStatus s){
         return budgets.get(s);
     }
 
-    public int size(){
-        return budgets.get(BudgetStatus.WITHOUT_BUDGET).size();
+    /**
+     * Return the number of budgets saved in a specific status
+     * @return
+     */
+    public int size(BudgetStatus bs){
+
+        return budgets.get(bs).size();
+    }
+
+    /**
+     * Counts the global amount of budgets registered, from all status
+     * @return
+     */
+    public int globalSize(){
+        int counter = 0;
+
+        for(Map.Entry<BudgetStatus,Map<UUID, Budget>> e : this.budgets.entrySet()){
+            counter += e.getValue().size();
+        }
+        return counter;
     }
 
 

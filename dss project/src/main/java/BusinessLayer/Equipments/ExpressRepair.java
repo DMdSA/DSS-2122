@@ -1,9 +1,10 @@
 package BusinessLayer.Equipments;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExpressRepair {
+public class ExpressRepair implements Serializable {
 
     /**
      * Instance Variables

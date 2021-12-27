@@ -1,12 +1,14 @@
 package BusinessLayer.Equipments;
 import org.javatuples.Triplet;
+
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class Budget implements Comparable<Budget>{
+public class Budget implements Comparable<Budget>, Serializable {
 
     /**
      * Instance Variables
@@ -67,6 +69,22 @@ public class Budget implements Comparable<Budget>{
     }
 
 
+    public Budget(Budget b){
+        this.budgetID = b.getBudgetID();
+        this.clientID = b.getClientID();
+        this.equip = b.getEquip();
+        this.finalPrice = b.getFinalPrice();
+        this.tech_username = b.getTech_username();
+        this.requestDate = b.getRequestDate();
+        this.estimatedTODO = b.getTodo();
+        this.status = b.getStatus();
+    }
+
+    public Budget clone(){
+        return new Budget(this);
+    }
+
+
     /**
      * Getters
      */
@@ -74,7 +92,7 @@ public class Budget implements Comparable<Budget>{
 
     public UUID getBudgetID(){return this.budgetID;}
     public String getClientID(){ return this.clientID;}
-    public Equipment getEquip(){ return this.equip;}
+    public Equipment getEquip(){ return this.equip.clone();}
     public Double getFinalPrice(){return this.finalPrice;}
     public String getTech_username(){ return this.tech_username;}
     public LocalDate getRequestDate(){ return this.requestDate;}
@@ -132,19 +150,23 @@ public class Budget implements Comparable<Budget>{
 
         StringBuilder sb = new StringBuilder();
 
-        sb.append("BudgetId:\"")
+        sb.append("BudgetId: \"")
                 .append(this.budgetID)
-                .append("\", clientId:\"")
+                .append("\", Equipment: \"")
+                .append(this.equip.name())
+                .append("\",\n\t   clientId: \"")
                 .append(this.clientID)
-                .append("\", Price:\"")
+                .append("\",   Price: \"")
                 .append(this.finalPrice)
-                .append("\", tech responsible:\"")
+                .append("\",   tech responsible: \"")
                 .append(this.tech_username)
-                .append("\", request date:\"")
+                .append("\",   request date: \"")
                 .append(this.requestDate)
-                .append("\", status:\"")
+                .append("\",   status: \"")
                 .append(this.status)
-                .append("\"");
+                .append("\",   counter responsible: \"")
+                .append(this.equip.counterResponsible())
+                .append("\"\n");
         return sb.toString();
     }
 

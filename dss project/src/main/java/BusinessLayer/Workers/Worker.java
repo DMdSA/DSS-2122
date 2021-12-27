@@ -18,11 +18,11 @@ public class Worker implements Serializable {
      * Constructors
      */
     public Worker(){
-        this.user = null;
-        this.pass = null;
-        this.name = null;
-        this.nif = null;
-        this.phone = null;
+        this.user = "";
+        this.pass = "";
+        this.name = "";
+        this.nif = "";
+        this.phone = "";
         this.hierarchy = null;
     }
 
@@ -30,9 +30,9 @@ public class Worker implements Serializable {
 
         this.user = user;
         this.pass = pass;
-        this.name = null;
-        this.nif = null;
-        this.phone = null;
+        this.name = "";
+        this.nif = "";
+        this.phone = "";
         this.hierarchy = null;
     }
 
@@ -87,14 +87,14 @@ public class Worker implements Serializable {
     public String toString(){
 
         StringBuilder sb = new StringBuilder();
-        sb.append("User:\"")
+        sb.append("User: \"")
                 .append(user)
-                .append("\" | Password:\"")
+                .append("\" | Password: \"")
                 .append(pass)
-                .append("\" | name:\"")
+                .append("\" | name: \"")
                 .append(name)
-                .append("\" | Nif:\"")
-                .append("\" | Phone:\"")
+                .append("\" | Nif: \"")
+                .append("\" | Phone: \"")
                 .append(phone)
                 .append("\"");
         return sb.toString();

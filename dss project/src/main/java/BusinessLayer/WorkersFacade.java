@@ -10,9 +10,11 @@ import DataBase.ClientDAO;
 import DataBase.ProcessingCenterDAO;
 import DataBase.WorkersDAO;
 import java.io.*;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class WorkersFacade implements IWorkers, Serializable {
 
@@ -25,8 +27,8 @@ public class WorkersFacade implements IWorkers, Serializable {
     private static final String path = "C:\\Users\\diogo\\Ambiente de Trabalho\\UNIVERSIDADE MINHO\\3ano\\1semestre\\Desenvolvimento Sistemas Software\\Trabalho Pratico\\dss project\\src\\main\\java\\DataBase\\workers_facade";
 
 
-    public WorkersFacade(){
-        //todo
+    public WorkersFacade() throws IOException, ClassNotFoundException {
+        this.load();
     }
 
     public WorkersFacade(ClientDAO clientdao, WorkersDAO workersdao, ProcessingCenterDAO processingCenterdao){
@@ -131,6 +133,13 @@ public class WorkersFacade implements IWorkers, Serializable {
      * COUNTER ------------------
      */
 
+
+    public Worker hasWorker(String user, String pass){
+
+        return this.workers_dao.confirmWorker(user, pass);
+    }
+
+
     /**
      * Verifies if the system has a specific worker
      * @param h
@@ -169,10 +178,6 @@ public class WorkersFacade implements IWorkers, Serializable {
     public boolean hasWorkers(Hierarchy h){
 
         return (this.workers_dao.get(h).size() > 0);
-    }
-
-    public Worker hasWorker(String user){
-        return workers_dao.get(user);
     }
 
     /**
@@ -235,16 +240,30 @@ public class WorkersFacade implements IWorkers, Serializable {
         //                                     de "à espera de entrega" -> entregue
     }
 
+    /**
+     * Verifies if the system has any budgets registered
+     * @return
+     */
     @Override
     public boolean hasBudgetRequests(){
 
-        return false;
-        //TODO TODO TODO
+        return (this.processingCenter_dao.globalSize() > 0);
     }
 
 
+    /**
+     * Gets all budgets associated with a specific budget status
+     * @param bs
+     * @return
+     */
     public Map<UUID, Budget> getBudgetRequestsbyStatus(BudgetStatus bs){
-        return this.processingCenter_dao.get_by_state(bs);
+
+        Map<UUID,Budget> status = this.processingCenter_dao.get_by_state(bs);
+        Map<UUID, Budget> answer = new HashMap<>();
+        for(Map.Entry<UUID, Budget> e : status.entrySet())
+            answer.put(e.getKey(), e.getValue().clone());
+
+        return answer;
     }
 
 
@@ -272,6 +291,15 @@ public class WorkersFacade implements IWorkers, Serializable {
     @Override
     public void exitSystem() {
 
+    }
+
+    /**
+     * MANAGER -------
+     */
+
+    public boolean registerWorker(Worker w){
+
+        return this.workers_dao.add(w);
     }
 
 

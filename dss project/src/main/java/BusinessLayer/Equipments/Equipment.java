@@ -1,8 +1,9 @@
 package BusinessLayer.Equipments;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class Equipment {
+public class Equipment implements Serializable {
 
     /**
      * Instance Variables
@@ -38,6 +39,18 @@ public class Equipment {
         this.repaired = false;
     }
 
+    public Equipment(Equipment e){
+        this.id = e.ID();
+        this.name = e.name();
+        this.clientNif = e.clientNif();
+        this.counterResponsible = e.counterResponsible();
+        this.technicianResponsible = e.technicianResponsible();
+        this.repaired = e.isRepaired();
+    }
+
+    public Equipment clone(){
+        return new Equipment(this);
+    }
 
     /**
     Setters

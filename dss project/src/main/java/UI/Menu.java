@@ -57,7 +57,7 @@ public class Menu {
         for(String s : this.options){
 
             availableOptions.add(()->true);
-            handlers.add(() -> System.out.println("Opção não implementada"));
+            handlers.add(() -> System.out.println("Opção não implementada\n\n"));
         }
     }
 

@@ -56,13 +56,11 @@ public class Manager extends Worker{
 
         StringBuilder sb = new StringBuilder();
 
-        sb.append("[Manager] user:\"")
+        sb.append("[Manager] user: \"")
                 .append(this.getUser())
-                .append("\", pass:\"")
-                .append(this.getPass())
-                .append(", name:\"")
+                .append(", name: \"")
                 .append(this.getName())
-                .append(", nif:\"")
+                .append(", nif: \"")
                 .append(this.getNif());
 
         return sb.toString();

@@ -32,7 +32,21 @@ public class WorkersDAO implements Serializable {
 
 
     public boolean hasWorker(Hierarchy h, String user){
+
         return this.workersDAO.get(h).containsKey(user);
+    }
+
+    public Worker confirmWorker(String user, String pass){
+
+        for(Map.Entry<Hierarchy, Map<String, Worker>> e : this.workersDAO.entrySet()){
+
+            for(Map.Entry<String, Worker> ee : e.getValue().entrySet()){
+
+                if(ee.getKey().equals(user) && ee.getValue().getPass().equals(pass))
+                    return ee.getValue().clone();
+            }
+        }
+        return null;
     }
 
 
@@ -110,20 +124,6 @@ public class WorkersDAO implements Serializable {
         return this.workersDAO.get(h);
         // TODO clone???
     }
-
-    public Worker get(String user){
-        if(workersDAO.get(Hierarchy.COUNTER).containsKey(user)){
-            return workersDAO.get(Hierarchy.COUNTER).get(user);
-        }
-        else if(workersDAO.get(Hierarchy.TECHNICIAN).containsKey(user)){
-            return workersDAO.get(Hierarchy.TECHNICIAN).get(user);
-        }
-        else if(workersDAO.get(Hierarchy.MANAGER).containsKey(user)){
-            return workersDAO.get(Hierarchy.MANAGER).get(user);
-        }
-        return null;
-    }
-
 
 
 
