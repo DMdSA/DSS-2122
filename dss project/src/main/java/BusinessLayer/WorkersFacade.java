@@ -2,19 +2,20 @@ package BusinessLayer;
 import BusinessLayer.Client.Client;
 import BusinessLayer.Equipments.Budget;
 import BusinessLayer.Equipments.BudgetStatus;
+import BusinessLayer.Equipments.ExpressRepair;
 import BusinessLayer.Services.Service;
 import BusinessLayer.Workers.Counter;
 import BusinessLayer.Workers.Hierarchy;
 import BusinessLayer.Workers.Worker;
 import DataBase.ClientDAO;
+import DataBase.ExpressServicesDAO;
 import DataBase.ProcessingCenterDAO;
 import DataBase.WorkersDAO;
+import org.javatuples.Triplet;
+
 import java.io.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import java.time.LocalTime;
+import java.util.*;
 
 public class WorkersFacade implements IWorkers, Serializable {
 
@@ -24,6 +25,7 @@ public class WorkersFacade implements IWorkers, Serializable {
     private ClientDAO clients_dao;
     private WorkersDAO workers_dao;
     private ProcessingCenterDAO processingCenter_dao;
+    private ExpressServicesDAO expressServices_dao;
     private static final String path = "C:\\Users\\diogo\\Ambiente de Trabalho\\UNIVERSIDADE MINHO\\3ano\\1semestre\\Desenvolvimento Sistemas Software\\Trabalho Pratico\\dss project\\src\\main\\java\\DataBase\\workers_facade";
 
 
@@ -31,10 +33,11 @@ public class WorkersFacade implements IWorkers, Serializable {
         this.load();
     }
 
-    public WorkersFacade(ClientDAO clientdao, WorkersDAO workersdao, ProcessingCenterDAO processingCenterdao){
+    public WorkersFacade(ClientDAO clientdao, WorkersDAO workersdao, ProcessingCenterDAO processingCenterdao, ExpressServicesDAO expressServicesdao){
         this.clients_dao = clientdao;
         this.workers_dao = workersdao;
         this.processingCenter_dao = processingCenterdao;
+        this.expressServices_dao = expressServicesdao;
     }
 
     public WorkersDAO getWorkers(){
@@ -98,8 +101,10 @@ public class WorkersFacade implements IWorkers, Serializable {
      * @return
      */
     @Override
-    public boolean updateClient() {
-        return false;
+    public boolean updateClient(Client c) {
+
+        String nif = c.getNIF();
+        return this.clients_dao.update(c);
     }
 
     /**
@@ -190,6 +195,24 @@ public class WorkersFacade implements IWorkers, Serializable {
     }
 
 
+    public void update_budget(Budget b, double new_price, List<Triplet<String, LocalTime, Double>> new_passos, BudgetStatus new_budgetStatus){
+        processingCenter_dao.get(b.getBudgetID()).setFinalPrice(new_price);
+        processingCenter_dao.get(b.getBudgetID()).setTodo(new_passos);
+        processingCenter_dao.get(b.getBudgetID()).setStatus(new_budgetStatus);
+    }
+
+    public void view_passos(Budget b){ //Debug
+        Budget aux = processingCenter_dao.get(b.getBudgetID());
+        for(int i = 0; i < aux.getTodo().size(); i++){
+            System.out.println(aux.getTodo().get(i).getValue0());
+            System.out.println(aux.getTodo().get(i).getValue1());
+            System.out.println(aux.getTodo().get(i).getValue2());
+            System.out.println();
+        }
+    }
+
+
+
     /**
      * Registers a new budget request / normal service
      * @param service
@@ -223,13 +246,28 @@ public class WorkersFacade implements IWorkers, Serializable {
      *
      */
     @Override
-    public void consultExpressServices() {
+    public List<Object> consultExpressServices() {
+
+        List<ExpressRepair> expresses = this.expressServices_dao.getAllServices();
+        return Arrays.asList(expresses.toArray());
     }
 
+    public int numberOfExpressServices(){
+        return this.expressServices_dao.size();
+    }
+
+    public ExpressRepair getExpressService(int token){
+        return this.expressServices_dao.get(token);
+    }
+
+    /**
+     * Verifies if the system has any express services available
+     * @return
+     */
     @Override
     public boolean hasExpressServices(){
-        return false;
-        // TODO TODO TODO
+
+        return (this.expressServices_dao.size() > 0);
     }
 
     @Override

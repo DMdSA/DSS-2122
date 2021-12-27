@@ -58,10 +58,11 @@ public class Manager extends Worker{
 
         sb.append("[Manager] user: \"")
                 .append(this.getUser())
-                .append(", name: \"")
+                .append("\", name: \"")
                 .append(this.getName())
-                .append(", nif: \"")
-                .append(this.getNif());
+                .append("\", nif: \"")
+                .append(this.getNif())
+                .append("\"");
 
         return sb.toString();
     }

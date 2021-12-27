@@ -97,15 +97,17 @@ public class ExpressRepair implements Serializable {
      * toString
      */
 
-    public String toString(){
+    public String toString(int i){
 
         StringBuilder sb = new StringBuilder();
 
-        sb.append("[ExpressRepair] Service:\"")
+        sb.append("[ExpressRepair token[")
+                .append(i)
+                .append("]]   Service:\"")
                 .append(this.repair_name)
-                .append("\", Description:\"")
+                .append("\",   Description:\"")
                 .append(this.repair_description)
-                .append("\", Price:\"")
+                .append("\",   Price:\"")
                 .append(this.price)
                 .append("\"");
         return sb.toString();

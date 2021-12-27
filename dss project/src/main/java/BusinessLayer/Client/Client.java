@@ -52,7 +52,7 @@ public class Client implements Serializable {
     public void setName(String name) {this.name = name;}
     public void setNif(String nif){ this.nif = nif;}
     public void setEmail(String email) {this.email = email;}
-    public void setPhone_number(String phonenumber) { this.phone_number = phonenumber;}
+    public void setPhone(String phonenumber) { this.phone_number = phonenumber;}
 
     /**
      * Getters

@@ -1,7 +1,5 @@
 package BusinessLayer.Workers;
 
-import java.io.Serializable;
-
 public class Technician extends Worker {
 
     /**
@@ -69,10 +67,11 @@ public class Technician extends Worker {
                 .append(this.getUser())
                 .append("\", pass:\"")
                 .append(this.getPass())
-                .append(", name:\"")
+                .append("\", name:\"")
                 .append(this.getName())
-                .append(", nif:\"")
-                .append(this.getNif());
+                .append("\", nif:\"")
+                .append(this.getNif())
+                .append("\"");
 
         return sb.toString();
     }
@@ -90,5 +89,4 @@ public class Technician extends Worker {
         return super.equals(that) &&
                 this.isAvailable == that.isAvailable;
     }
-
 }

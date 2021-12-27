@@ -22,6 +22,7 @@ public class Budget implements Comparable<Budget>, Serializable {
     private LocalDate requestDate;                                              // Data pedido
     private List<Triplet<String, LocalTime, Double>> estimatedTODO;             // Passos
     private BudgetStatus status;                                                // Status
+    private boolean express;
 
     /**
      * Constructors
@@ -37,6 +38,7 @@ public class Budget implements Comparable<Budget>, Serializable {
         this.requestDate = LocalDate.now();
         this.estimatedTODO = new ArrayList<>();
         this.status = BudgetStatus.WITHOUT_BUDGET;
+        this.express = false;
     }
 
     // Constructor destinado a pedidos EXPRESSO
@@ -50,7 +52,7 @@ public class Budget implements Comparable<Budget>, Serializable {
         this.requestDate = LocalDate.now();
         this.estimatedTODO = new ArrayList<>();
         this.status = BudgetStatus.WAITING_REPAIR;
-
+        this.express = true;
     }
 
 
@@ -66,6 +68,7 @@ public class Budget implements Comparable<Budget>, Serializable {
         this.requestDate = LocalDate.now();
         this.estimatedTODO = new ArrayList<>();
         this.status = BudgetStatus.WITHOUT_BUDGET;
+        this.express = false;
     }
 
 
@@ -78,6 +81,7 @@ public class Budget implements Comparable<Budget>, Serializable {
         this.requestDate = b.getRequestDate();
         this.estimatedTODO = b.getTodo();
         this.status = b.getStatus();
+        this.express = b.getExpress();
     }
 
     public Budget clone(){
@@ -98,6 +102,7 @@ public class Budget implements Comparable<Budget>, Serializable {
     public LocalDate getRequestDate(){ return this.requestDate;}
     public List<Triplet<String, LocalTime, Double>> getTodo(){ return new ArrayList<>(this.estimatedTODO);}
     public BudgetStatus getStatus(){ return this.status;}
+    public boolean getExpress(){ return this.express;}
 
 
     /**
@@ -140,7 +145,8 @@ public class Budget implements Comparable<Budget>, Serializable {
                 this.tech_username.equals(that.tech_username) &&
                 this.requestDate.equals(that.requestDate) &&
                 this.estimatedTODO.equals(that.estimatedTODO) &&
-                this.status.equals(that.status);
+                this.status.equals(that.status) &&
+                this.express == that.express;
     }
 
     /**
@@ -154,6 +160,8 @@ public class Budget implements Comparable<Budget>, Serializable {
                 .append(this.budgetID)
                 .append("\", Equipment: \"")
                 .append(this.equip.name())
+                .append("\", Express: \"")
+                .append(this.express)
                 .append("\",\n\t   clientId: \"")
                 .append(this.clientID)
                 .append("\",   Price: \"")

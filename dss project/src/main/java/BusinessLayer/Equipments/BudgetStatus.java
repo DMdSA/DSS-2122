@@ -45,4 +45,17 @@ public enum BudgetStatus implements Serializable {
             default -> "?error?";
         };
     }
+
+    public static BudgetStatus getStatus(int v){
+        return switch (v) {
+            case 1 -> WITHOUT_BUDGET;
+            case 2 -> WAITING_APPROVAL;
+            case 3 -> DECLINED;
+            case 4 -> WAITING_REPAIR;
+            case 5 -> WAITING_PICKUP;
+            case 6 -> DELIVERED;
+            case 7 -> ARCHIVED;
+            default -> null;
+        };
+    }
 }

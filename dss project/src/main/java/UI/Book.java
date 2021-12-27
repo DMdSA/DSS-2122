@@ -3,6 +3,7 @@ package UI;
 
 import BusinessLayer.Client.Client;
 import BusinessLayer.Equipments.Budget;
+import BusinessLayer.Equipments.ExpressRepair;
 import BusinessLayer.Workers.Hierarchy;
 import BusinessLayer.Workers.Worker;
 import DataBase.ClientDAO;
@@ -70,6 +71,14 @@ public class Book {
         Show_book(budgets_list);
     }
 
+    /**
+     * Book that shows the express services available at the repair center
+     * @param services
+     */
+    public static void Show_ExpressServices(List<Object> services){
+
+        Show_book(services);
+    }
 
 
     /**
@@ -95,7 +104,13 @@ public class Book {
             System.out.println();
             // print dos objetos
             for (; index < aux_index; index++) {
-                System.out.println(list.get(index));
+
+                if(list.get(index) instanceof ExpressRepair){
+                    System.out.println(((ExpressRepair) list.get(index)).toString(index+1));
+                }
+                else {
+                    System.out.println(list.get(index));
+                }
             }
             // user help
             System.out.println("\na - previous | d - next | c - leave | Page [" + current_page + "]/[" + n_pages + "]");

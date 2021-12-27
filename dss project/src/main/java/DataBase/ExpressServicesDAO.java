@@ -1,11 +1,13 @@
 package DataBase;
 
 import BusinessLayer.Equipments.ExpressRepair;
+
+import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class ExpressServicesDAO {
+public class ExpressServicesDAO implements Serializable {
 
     /**
      * Instance Variables
@@ -54,10 +56,22 @@ public class ExpressServicesDAO {
     }
 
     public ExpressRepair get(int token){
-        return this.available_express_services.get(token).clone();
+        if(token < this.nextToken) {
+            return this.available_express_services.get(token).clone();
+        }
+        else return null;
     }
 
 
+    public List<ExpressRepair> getAllServices(){
+
+        int size = this.available_express_services.size();
+        List<ExpressRepair> answer = new ArrayList<>();
+        for(int i = 1; i <= size; i++){
+            answer.add(this.available_express_services.get(i).clone());
+        }
+        return answer;
+    }
 
     /**
      * Add a new ExpressRepair service, associating it with the new

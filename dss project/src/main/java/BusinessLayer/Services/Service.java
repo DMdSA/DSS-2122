@@ -3,6 +3,7 @@ package BusinessLayer.Services;
 import BusinessLayer.Client.Client;
 import BusinessLayer.Equipments.Budget;
 import BusinessLayer.Equipments.Equipment;
+import BusinessLayer.Equipments.ExpressRepair;
 
 public class Service {
 
@@ -14,6 +15,7 @@ public class Service {
     private String clientID;
     private Equipment equipment;
     private Budget budget;
+    private boolean isExpress;
 
 
     /**
@@ -23,7 +25,17 @@ public class Service {
 
         this.clientID = clientId;
         this.equipment = new Equipment(EquipmentDescription, this.clientID, counterId);
+        this.isExpress = false;
         this.budget = new Budget(this.clientID, this.equipment);
+    }
+
+
+    public Service(String clientid, String equipDescription, String counterid, ExpressRepair er){
+
+        this.clientID = clientid;
+        this.equipment = new Equipment(equipDescription, this.clientID, counterid);
+        this.isExpress = true;
+        this.budget = new Budget(this.clientID, this.equipment, er.getPrice());
     }
 
     /**
@@ -41,6 +53,8 @@ public class Service {
     public Budget getBudget(){          // clone???
         return this.budget;
     }
+
+    public boolean getIsExpress(){ return this.isExpress;}
 
     /**
      * Setters
@@ -65,7 +79,8 @@ public class Service {
         Service that = (Service) o;
         return this.clientID.equals(that.clientID) &&
                 this.equipment.equals(that.equipment) &&
-                this.budget.equals(that.budget);
+                this.budget.equals(that.budget) &&
+                this.isExpress == that.getIsExpress();
     }
 
     /**
@@ -75,16 +90,18 @@ public class Service {
 
         StringBuilder sb = new StringBuilder();
 
-        sb.append("[Service]: Client Id:\"")
+        sb.append("[Service]: Client Id: \"")
                 .append(this.clientID)
-                .append("\", Equipment name:\"")
+                .append("\", Equipment name: \"")
                 .append(this.equipment.name())
-                .append("\", Equipment Id:\"")
+                .append("\", Equipment Id: \"")
                 .append(this.equipment.ID())
-                .append("\", Budget Id:\"")
+                .append("\", Budget Id: \"")
                 .append(this.budget.getBudgetID())
-                .append("\", Tech responsible:\"")
+                .append("\", Tech responsible: \"")
                 .append(this.budget.getTech_username())
+                .append("\", Express: \"")
+                .append(this.isExpress)
                 .append("\"");
         return sb.toString();
     }

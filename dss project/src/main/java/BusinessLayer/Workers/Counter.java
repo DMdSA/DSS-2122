@@ -114,11 +114,11 @@ public class Counter extends Worker{
                 .append(this.getUser())
                 .append("\",  pass: \"")
                 .append(this.getPass())
-                .append(",  name: \"")
+                .append("\",  name: \"")
                 .append(this.getName())
-                .append(",  nif: \"")
+                .append("\",  nif: \"")
                 .append(this.getNif())
-                .append(",  phone: \"")
+                .append("\",  phone: \"")
                 .append(this.getPhone())
                 .append("\"");
 

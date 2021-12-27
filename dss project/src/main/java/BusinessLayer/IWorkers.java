@@ -7,6 +7,7 @@ import DataBase.ClientDAO;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 public interface IWorkers {
@@ -18,7 +19,7 @@ public interface IWorkers {
     Client getClientByPhone(String phone);
     boolean hasClient(String nif);
     boolean registerClient(Client c);
-    boolean updateClient();
+    boolean updateClient(Client c);
     boolean removeClient();
     boolean hasClients();
     public ClientDAO getClients();
@@ -34,7 +35,7 @@ public interface IWorkers {
     boolean registerBudgetRequest(Service service);
 
     //void consultExpressService();
-    void consultExpressServices();
+    List<Object> consultExpressServices();
     boolean hasExpressServices();
 
     boolean consultBudgetRequests();
