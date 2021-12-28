@@ -233,4 +233,23 @@ public class WorkersUI {
             clearview();
         }
     }
+
+    /**
+     * Verifies if the system has any technician available at the moment
+     * @return
+     */
+    public boolean checkTechAvailability() {
+
+        boolean flag = this.shopUI.getWorkers_facade().checkTechAvailability();
+        if (flag) {
+            System.out.println("#> There are technicians available");
+            this.shopUI.pause();
+        } else {
+            System.out.println("#> error: there are no technicians available at the moment");
+            this.shopUI.pause();
+        }
+        clearview();
+        return flag;
+    }
+
 }

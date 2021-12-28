@@ -157,9 +157,14 @@ public class WorkersFacade implements IWorkers, Serializable {
         this.workers_dao.update(w);
     }
 
+    /**
+     * Verifies if the system has any technician available at the moment
+     * @return
+     */
     @Override
     public boolean checkTechAvailability() {
-        return false;                                   //todo help
+
+        return this.workers_dao.hasTechAvailable();
     }
 
 

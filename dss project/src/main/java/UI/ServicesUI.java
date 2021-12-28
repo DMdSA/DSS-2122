@@ -93,6 +93,7 @@ public class ServicesUI {
                         , BudgetStatus.WAITING_APPROVAL.toString()
                         , BudgetStatus.DECLINED.toString()
                         , BudgetStatus.WAITING_REPAIR.toString()
+                        , BudgetStatus.REPAIRING.toString()
                         , BudgetStatus.WAITING_PICKUP.toString()
                         , BudgetStatus.DELIVERED.toString()
                         , BudgetStatus.ARCHIVED.toString()
@@ -103,9 +104,10 @@ public class ServicesUI {
         ConsultStatus.setHandler(2, () -> ConsultBudget(BudgetStatus.WAITING_APPROVAL));
         ConsultStatus.setHandler(3, () -> ConsultBudget(BudgetStatus.DECLINED));
         ConsultStatus.setHandler(4, () -> ConsultBudget(BudgetStatus.WAITING_REPAIR));
-        ConsultStatus.setHandler(5, () -> ConsultBudget(BudgetStatus.WAITING_PICKUP));
-        ConsultStatus.setHandler(6, () -> ConsultBudget(BudgetStatus.DELIVERED));
-        ConsultStatus.setHandler(7, () -> ConsultBudget(BudgetStatus.ARCHIVED));
+        ConsultStatus.setHandler(5, () -> ConsultBudget(BudgetStatus.REPAIRING));
+        ConsultStatus.setHandler(6, () -> ConsultBudget(BudgetStatus.WAITING_PICKUP));
+        ConsultStatus.setHandler(7, () -> ConsultBudget(BudgetStatus.DELIVERED));
+        ConsultStatus.setHandler(8, () -> ConsultBudget(BudgetStatus.ARCHIVED));
         ConsultStatus.run();
     }
 

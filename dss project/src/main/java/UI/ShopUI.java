@@ -161,8 +161,8 @@ public class ShopUI {
                         , "Register Normal Service"                             // 3
                         , "Available Express Services"                          // 4
                         , "Consult Service Requests"                            // 5
-                        , "Check Technician Availability"                       // 6 TODO
-                        , "Payment"                                             // 7 todo
+                        , "Check Technician Availability"                       // 6
+                        , "Payment"                                             // 7
                         , "Save Registers"                                      // 8
                         , "Load registers"                                      // 9
                 ));
@@ -178,7 +178,7 @@ public class ShopUI {
         CounterMenu.setHandler(3, servicesUI::RegisterNormalService);
         CounterMenu.setHandler(4, servicesUI::ConsultExpressServicesMenu);
         CounterMenu.setHandler(5, servicesUI::ConsultBudgetRequest);
-        //CounterMenu.setHandler(6, this:: ?);
+        CounterMenu.setHandler(6, () -> this.workersUI.checkTechAvailability());
         CounterMenu.setHandler(7, servicesUI::PaymentMenu);
         CounterMenu.setHandler(8, this::Save);
         CounterMenu.setHandler(9, this::Load);

@@ -2,10 +2,12 @@ package DataBase;
 
 import BusinessLayer.Workers.Counter;
 import BusinessLayer.Workers.Hierarchy;
+import BusinessLayer.Workers.Technician;
 import BusinessLayer.Workers.Worker;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class WorkersDAO implements Serializable {
@@ -156,40 +158,21 @@ public class WorkersDAO implements Serializable {
         return this.update(c);
     }
 
-
-
     /**
-     * Writes a WorkersDAO object to a file
-     * path is specified in object's instance variables
+     * Verifies if the system has any technician available at the moment
+     * @return
      */
-    public void WriteObjectToFile() {
-        try {
-            FileOutputStream fileOut = new FileOutputStream(path);
-            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
-            objectOut.writeObject(this);
-            objectOut.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+    public boolean hasTechAvailable(){
+
+        Map<String, Worker> techs = this.workersDAO.get(Hierarchy.TECHNICIAN);
+
+        for(Map.Entry<String, Worker> e : techs.entrySet()){
+
+            Technician t = (Technician) e.getValue();
+            if(t.getAvailability()){
+                return true;
+            }
         }
+        return false;
     }
-
-    /**
-     * Loads an WorkersDAO object from an object file
-     * @return WorkersDAO object, or null
-     * @throws IOException
-     * @throws ClassNotFoundException
-     */
-    public static WorkersDAO loadFileToObject() throws IOException, ClassNotFoundException {
-
-        FileInputStream fileStream = new FileInputStream(path);
-        ObjectInputStream input = new ObjectInputStream(fileStream);
-
-        Object o = input.readObject();
-
-        if(o instanceof WorkersDAO){
-            return (WorkersDAO) o;
-        }
-        return null;
-    }
-
 }
