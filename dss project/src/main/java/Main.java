@@ -1,4 +1,4 @@
-import BusinessLayer.Client.Client;
+import BusinessLayer.Client;
 import BusinessLayer.Equipments.Budget;
 import BusinessLayer.Equipments.BudgetStatus;
 import BusinessLayer.Equipments.Equipment;
@@ -111,8 +111,14 @@ public class Main {
 
         Budget budget1 = new Budget("999000999", new Equipment("Forno","999000999","counter1"));
         Budget budget2 = new Budget("999000999", new Equipment("Forno2","999000999","counter2"));
+        Budget budget3 = new Budget("999000999", new Equipment("Forno3","999000999","counter1"));
+        Budget budget4 = new Budget("999000999", new Equipment("Forno4","999000999","counter2"));
         ProcessingCenterDAO processingCenterDAO = new ProcessingCenterDAO();
         processingCenterDAO.add(budget1);processingCenterDAO.add(budget2);
+        budget3.setStatus(BudgetStatus.WAITING_REPAIR);
+        budget4.setStatus(BudgetStatus.ON_HOLD);
+        budget4.setTech_username_repair("tech1");
+        processingCenterDAO.add(budget3);processingCenterDAO.add(budget4);
         System.out.println(processingCenterDAO.size(BudgetStatus.WITHOUT_BUDGET));
 
         // debug purposes only------
