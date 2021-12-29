@@ -1,8 +1,6 @@
 package DataBase;
-
 import BusinessLayer.Equipments.Budget;
 import BusinessLayer.Equipments.BudgetStatus;
-
 import java.io.Serializable;
 import java.util.*;
 
@@ -27,8 +25,6 @@ public class ProcessingCenterDAO implements Serializable {
         for(BudgetStatus bs : BudgetStatus.values()){
             this.budgets.put(bs, new TreeMap<>());
         }
-
-        //TODO
     }
 
     /**
@@ -45,8 +41,15 @@ public class ProcessingCenterDAO implements Serializable {
         return null;
     }
 
+    /**
+     * Gets a list of budgets that a technician made (budget only, not repairs)
+     * @param username
+     * @return
+     */
     public List<Budget> getByUsername(String username){
+
         List<Budget> budgets = new ArrayList<>();
+        // ??
         for(Map.Entry<BudgetStatus, Map<UUID, Budget>> entry : this.budgets.entrySet()){
 
             for(Map.Entry<UUID, Budget> e : entry.getValue().entrySet()){
@@ -60,7 +63,7 @@ public class ProcessingCenterDAO implements Serializable {
     }
 
     /**
-     * Gets all the budgets worker on by a specific Technician
+     * Gets all the budgets worker on by a specific Technician (both repair and budget)
      * @param username
      * @return
      */
@@ -101,6 +104,11 @@ public class ProcessingCenterDAO implements Serializable {
         return answer;
     }
 
+    /**
+     * ???
+     * @param bs
+     * @return
+     */
     public Budget getFirst(BudgetStatus bs){
         TreeMap<UUID,Budget> aux = (TreeMap<UUID, Budget>) this.budgets.get(bs);
         return aux.firstEntry().getValue();
@@ -108,7 +116,7 @@ public class ProcessingCenterDAO implements Serializable {
 
 
     /**
-     * Add
+     * Add a new budget to database
      */
     public boolean add(Budget b){
 
@@ -119,15 +127,14 @@ public class ProcessingCenterDAO implements Serializable {
             // já existia
             return false;
         }
-        this.budgets.get(bs).put(b.getBudgetID(), b);   // clone???
+        this.budgets.get(bs).put(b.getBudgetID(), b.clone());
         return true;
     }
 
     /**
-     * Remove
+     * Removes a budget from database
      */
     public boolean remove(Budget b){
-
 
         BudgetStatus bs = b.getStatus();
         Map<UUID, Budget> bgts = this.budgets.get(bs);
@@ -142,9 +149,8 @@ public class ProcessingCenterDAO implements Serializable {
         return false;
     }
 
-
     /**
-     * Update
+     * Updates a budget
      */
     public boolean update(Budget b){
 
@@ -169,7 +175,8 @@ public class ProcessingCenterDAO implements Serializable {
      * @param bs new budgetstatus
      * @return
      *
-     *
+     * The method is to remove the budget from its previous line of status, update it
+     * with the new wanted status and finally add it to the database, again
      */
     public boolean update(Budget b, BudgetStatus bs){
 
@@ -193,7 +200,12 @@ public class ProcessingCenterDAO implements Serializable {
         return budgets.get(s);
     }
 
-
+    /**
+     * ???
+     * @param s
+     * @param bs
+     * @return
+     */
     public List<Budget> get_by_user_and_status_repair(String s, BudgetStatus bs){
         List<Budget> aux = new ArrayList<>();
         for(Map.Entry<UUID, Budget> e : this.budgets.get(bs).entrySet()){
@@ -205,6 +217,12 @@ public class ProcessingCenterDAO implements Serializable {
         return aux;
     }
 
+    /**
+     * ???
+     * @param s
+     * @param bs
+     * @return
+     */
     public List<Budget> get_by_user_and_status_budget(String s, BudgetStatus bs){
         List<Budget> aux = new ArrayList<>();
         for(Map.Entry<UUID, Budget> e : this.budgets.get(bs).entrySet()){
@@ -236,6 +254,4 @@ public class ProcessingCenterDAO implements Serializable {
         }
         return counter;
     }
-
-
 }

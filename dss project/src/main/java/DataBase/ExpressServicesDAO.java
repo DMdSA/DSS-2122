@@ -55,6 +55,11 @@ public class ExpressServicesDAO implements Serializable {
         return this.available_express_services.size();
     }
 
+    /**
+     * Gets a specific express service, given it's id/token/integer
+     * @param token
+     * @return
+     */
     public ExpressRepair get(int token){
         if(token < this.nextToken) {
             return this.available_express_services.get(token).clone();
@@ -62,7 +67,10 @@ public class ExpressServicesDAO implements Serializable {
         else return null;
     }
 
-
+    /**
+     * Gets a list of all express services available on the repair center
+     * @return
+     */
     public List<ExpressRepair> getAllServices(){
 
         int size = this.available_express_services.size();
@@ -126,6 +134,11 @@ public class ExpressServicesDAO implements Serializable {
         return false;
     }
 
+    /**
+     * Removes an express service from database
+     * @param token
+     * @return
+     */
     public boolean remove(int token){
         if(this.available_express_services.containsKey(token)){
             this.available_express_services.remove(token);

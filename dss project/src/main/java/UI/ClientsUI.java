@@ -125,6 +125,7 @@ public class ClientsUI {
             shopui.getWorkers_facade().registerClient(new Client(name, nif, mail, phone));
             System.out.println("Added " + nif + " to database");
             shopui.pause();
+            clearview();
 
         } catch (NullPointerException npe){
             System.out.println("error: could not add the new client. nullpointerexception");

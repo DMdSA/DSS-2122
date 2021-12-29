@@ -7,7 +7,6 @@ import DataBase.ClientDAO;
 import DataBase.WorkersDAO;
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
-
 import java.io.*;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -20,31 +19,52 @@ public class WorkersFacade implements IWorkers, Serializable {
     /**
      * Instance Variables
      */
-    private ClientDAO clients_dao;
-    private WorkersDAO workers_dao;
+    private ClientDAO clients_dao;                          // clients database
+    private WorkersDAO workers_dao;                         // workers database
 
+    // auxiliar path to save/load the system's state
     private static final String path = new String(Paths.get("").toAbsolutePath().toString()
             +File.separator +"src" + File.separator + "main" +File.separator
             + "java" + File.separator + "DataBase" + File.separator
             + "WORKERS_DB");
 
 
+    /**
+     * Constructors
+     */
     public WorkersFacade() throws IOException, ClassNotFoundException {
         this.load();
     }
 
+    /**
+     * Constructor with specified database
+     */
     public WorkersFacade(ClientDAO clientdao, WorkersDAO workersdao){
         this.clients_dao = clientdao;
         this.workers_dao = workersdao;
     }
 
-    @Override
+    /**
+     * -----------------------------------------------
+     *          WORKERS
+     * -----------------------------------------------
+     */
+
+
+    /**
+     * Gets the workers database
+     * @return
+     */
     public WorkersDAO getWorkers(){
 
-        return this.workers_dao;    //todo clone ??
+        return this.workers_dao.clone();
     }
 
-    @Override
+    /**
+     * Registers a new worker to database
+     * @param w
+     * @return
+     */
     public boolean registerWorker(Worker w){
 
         return this.workers_dao.add(w);
@@ -118,14 +138,20 @@ public class WorkersFacade implements IWorkers, Serializable {
         return this.workers_dao.get(h, user);
     }
 
-
+    /**
+     * Gets a specific counter's statistics
+     * @param c
+     * @return
+     */
     public Pair<Integer,Integer> getCounterStatistics(Counter c){
 
         int rececao = 0;
         int entrega = 0;
 
+        // map<username, Pair< nrececoes, nentregas>>
         Map<String, Pair<Integer,Integer>> stats = c.getStatistics();
 
+        // somatório efetuado para cada cliente que possa ter atendido
         for(Map.Entry<String, Pair<Integer,Integer>> e : stats.entrySet()){
 
             rececao += e.getValue().getValue0();
@@ -134,28 +160,54 @@ public class WorkersFacade implements IWorkers, Serializable {
      return new Pair<>(rececao, entrega);
     }
 
-
-    @Override
+    /**
+     * Updates a worker's phone number
+     * @param h
+     * @param w
+     * @param phone
+     * @return
+     */
     public boolean updateWorkerPhone(Hierarchy h, Worker w, String phone){
         w.setPhone(phone);
         return this.workers_dao.update(w);
     }
 
-    @Override
+    /**
+     * Updates a worker's nif
+     * @param h
+     * @param w
+     * @param nif
+     * @return
+     */
     public boolean updateWorkerNif(Hierarchy h, Worker w, String nif){
         w.setNif(nif);
         return this.workers_dao.update(w);
     }
 
-    @Override
+    /**
+     * Updates a worker's password
+     * @param h
+     * @param w
+     * @param pass
+     * @return
+     */
     public boolean updateWorkerPass(Hierarchy h, Worker w, String pass){
         w.setPass(pass);
         return this.workers_dao.update(w);
     }
 
-    @Override
+    /**
+     * Updates a worker's name
+     * @param h
+     * @param w
+     * @param name
+     * @return
+     */
     public boolean updateWorkerName(Hierarchy h, Worker w, String name){
+
+        // change their name
         w.setName(name);
+        // update the new worker
         return this.workers_dao.update(w);
     }
     /**
@@ -168,6 +220,11 @@ public class WorkersFacade implements IWorkers, Serializable {
         return this.workers_dao.hasTechAvailable();
     }
 
+    /**
+     * Updates a technician's availability
+     * @param username
+     * @param flag
+     */
     public void update_worker_availability(String username, boolean flag){
         Technician aux = (Technician) this.workers_dao.get(Hierarchy.TECHNICIAN, username);
         workers_dao.updateAvaibility(aux,flag);
@@ -219,7 +276,9 @@ public class WorkersFacade implements IWorkers, Serializable {
 
 
     /**
-     * CLIENTS ------------------
+     * -----------------------------------------------
+     *          CLIENTS
+     * -----------------------------------------------
      */
 
     /**
@@ -228,7 +287,7 @@ public class WorkersFacade implements IWorkers, Serializable {
      */
     @Override
     public ClientDAO getClients(){
-        return this.clients_dao.clone();     // clone? todo
+        return this.clients_dao.clone();
     }
 
     /**
@@ -245,15 +304,6 @@ public class WorkersFacade implements IWorkers, Serializable {
         }
         this.clients_dao.add(c.clone());
         return true;
-    }
-
-    /**
-     * removes a client
-     * @return
-     */
-    @Override
-    public boolean removeClient() {
-        return false;
     }
 
 
@@ -309,12 +359,24 @@ public class WorkersFacade implements IWorkers, Serializable {
         return this.clients_dao.update(c);
     }
 
+    /**
+     * Updates a client's phone
+     * @param c
+     * @param phone
+     * @return
+     */
     @Override
     public boolean updateClientPhone(Client c, String phone){
         c.setPhone(phone);
         return this.clients_dao.update(c);
     }
 
+    /**
+     * Updates a client's mail
+     * @param c
+     * @param mail
+     * @return
+     */
     @Override
     public boolean updateClientMail(Client c, String mail){
         c.setEmail(mail);
@@ -323,26 +385,11 @@ public class WorkersFacade implements IWorkers, Serializable {
 
 
 
-    @Override
-    public boolean login() {
-        return false;
-    }
-
-    @Override
-    public void startSystem() {
-
-    }
-
-    @Override
-    public void exitSystem() {
-
-    }
-
     /**
-     * MANAGER -------
+     * -----------------------------------------------
+     *          LOAD AND SAVE
+     * -----------------------------------------------
      */
-
-
 
 
     /**

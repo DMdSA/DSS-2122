@@ -35,10 +35,12 @@ public class Technician extends Worker {
         this.isAvailable = t.getAvailability();
     }
 
+    /**
+     * Clone
+     */
     public Technician clone(){
         return new Technician(this);
     }
-
 
     /**
      * Getters
@@ -53,7 +55,6 @@ public class Technician extends Worker {
     public void setAvailability(boolean av){
         this.isAvailable = av;
     }
-
 
     /**
      * toString

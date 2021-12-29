@@ -11,8 +11,6 @@ import java.util.List;
 
 public class Service {
 
-        // Para registar um serviço, é preciso 1 cliente, 1 equipamento, 1 budget
-
     /**
      * Instance Variables
      */
@@ -20,8 +18,6 @@ public class Service {
     private Equipment equipment;
     private Budget budget;
     private boolean isExpress;
-
-
 
     /**
      * Constructors
@@ -52,14 +48,16 @@ public class Service {
     }
 
     public Equipment getEquipment(){
-        return this.equipment;          // clone???
+        return this.equipment.clone();
     }
 
-    public Budget getBudget(){          // clone???
-        return this.budget;
+    public Budget getBudget(){
+        return this.budget.clone();
     }
 
-    public boolean getIsExpress(){ return this.isExpress;}
+    public boolean getIsExpress(){
+        return this.isExpress;
+    }
 
     /**
      * Setters
@@ -70,8 +68,6 @@ public class Service {
         this.equipment.setClientNif(clientId);
         this.budget.setClientID(clientID);
     }
-    // Faz sentido haver mais setters?
-
 
     /**
      * equals

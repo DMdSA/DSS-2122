@@ -40,6 +40,9 @@ public class Counter extends Worker{
         this.statistics = c.getStatistics();
     }
 
+    /**
+     * Clone
+     */
     public Counter clone(){
         return new Counter(this);
     }

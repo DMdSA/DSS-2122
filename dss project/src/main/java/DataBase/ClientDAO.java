@@ -13,7 +13,6 @@ public class ClientDAO implements Serializable {
      */
     // Map< NIF, CLIENT >
     private Map<String,Client> clients;
-    private static final String path = "C:\\Users\\diogo\\Ambiente de Trabalho\\UNIVERSIDADE MINHO\\3ano\\1semestre\\Desenvolvimento Sistemas Software\\Trabalho Pratico\\dss project\\src\\main\\java\\DataBase\\clients";
 
     /**
      * Constructor
@@ -23,18 +22,18 @@ public class ClientDAO implements Serializable {
      */
     public ClientDAO(){
         this.clients = new HashMap<>();
-        //TODO
     }
-
 
     public ClientDAO(ClientDAO dao){
         this.clients = dao.get();
     }
 
+    /**
+     * Clone
+     */
     public ClientDAO clone(){
         return new ClientDAO(this);
     }
-
 
     /**
      * Get the number of clients saved on system
@@ -44,11 +43,14 @@ public class ClientDAO implements Serializable {
         return this.clients.size();
     }
 
-
+    /**
+     * Verifies if there is a client registered to a given nif
+     * @param nif
+     * @return
+     */
     public boolean hasClient(String nif){
         return this.clients.containsKey(nif);
     }
-
 
 
     /**
@@ -60,6 +62,11 @@ public class ClientDAO implements Serializable {
         return this.clients.getOrDefault(nif, null);
     }
 
+    /**
+     * Searchs for a client by their phone number
+     * @param phone
+     * @return
+     */
     public Client getByPhone(String phone){
 
         for(Map.Entry<String, Client> e : this.clients.entrySet()){
@@ -70,7 +77,6 @@ public class ClientDAO implements Serializable {
         }
         return null;
     }
-
 
     /**
      * Get all clients
@@ -83,7 +89,6 @@ public class ClientDAO implements Serializable {
             answer.put(e.getKey(),e.getValue().clone());
 
         return answer;
-        // TODO clone??
     }
 
 
@@ -143,41 +148,4 @@ public class ClientDAO implements Serializable {
         }
         return false;
     }
-
-
-    /**
-     * Writes a ClientDAO to an object file
-     */
-    public void WriteObjectToFile() {
-        try {
-            FileOutputStream fileOut = new FileOutputStream(path);
-            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
-            objectOut.writeObject(this);
-            objectOut.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-
-    /**
-     * Tries to load a ClientDAO object from an object file
-     * @return ClientDAO, if found, null otherwise
-     * @throws IOException
-     * @throws ClassNotFoundException
-     */
-    public static ClientDAO loadFileToObject() throws IOException, ClassNotFoundException {
-
-        FileInputStream fileStream = new FileInputStream(path);
-        ObjectInputStream input = new ObjectInputStream(fileStream);
-
-        Object o = input.readObject();
-
-        if(o instanceof ClientDAO){
-            return (ClientDAO) o;
-        }
-        return null;
-    }
-
 }

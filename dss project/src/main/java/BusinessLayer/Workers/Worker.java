@@ -56,10 +56,12 @@ public class Worker implements Serializable {
         this.hierarchy = w.getHierarchy();
     }
 
+    /**
+     * Clone
+     */
     public Worker clone(){
         return new Worker(this);
     }
-
 
     /**
      * Getters
@@ -116,6 +118,4 @@ public class Worker implements Serializable {
                 this.phone.equals(that.phone) &&
                 this.hierarchy == that.hierarchy;
     }
-
-
 }

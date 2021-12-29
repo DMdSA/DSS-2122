@@ -1,13 +1,10 @@
 package DataBase;
-
 import BusinessLayer.Workers.Counter;
 import BusinessLayer.Workers.Hierarchy;
 import BusinessLayer.Workers.Technician;
 import BusinessLayer.Workers.Worker;
-
 import java.io.*;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class WorkersDAO implements Serializable {
@@ -16,7 +13,6 @@ public class WorkersDAO implements Serializable {
      * Instance Variables
      */
     Map<Hierarchy, Map<String, Worker>> workersDAO;
-    private static final String path = "C:\\Users\\diogo\\Ambiente de Trabalho\\UNIVERSIDADE MINHO\\3ano\\1semestre\\Desenvolvimento Sistemas Software\\Trabalho Pratico\\dss project\\src\\main\\java\\DataBase\\workers";
 
     /**
      * Constructor
@@ -24,25 +20,74 @@ public class WorkersDAO implements Serializable {
      * For each hierarchy in system,
      * it creates a Map which maps each worker's username to it's object
      */
-    public WorkersDAO(){
+    public WorkersDAO() {
+
         this.workersDAO = new HashMap<>();
-        for(Hierarchy h : Hierarchy.values()){
+
+        for (Hierarchy h : Hierarchy.values()) {
             this.workersDAO.put(h, new HashMap<>());
         }
-
-        // TODO TODO TODO
     }
 
+    public WorkersDAO(WorkersDAO wdao){
+        this.workersDAO = wdao.getWorkers();
+    }
 
+    /**
+     * Clone
+     */
+    public WorkersDAO clone(){
+        return new WorkersDAO(this);
+    }
+
+    /**
+     * Returns the full list of workers on the system
+     * @return
+     */
+    public Map<Hierarchy, Map<String, Worker>> getWorkers(){
+
+        Map<Hierarchy, Map<String, Worker>> workers = new HashMap<>();
+
+        for(Map.Entry<Hierarchy, Map<String, Worker>> ee : this.workersDAO.entrySet()){
+
+            Hierarchy h = ee.getKey();
+            workers.put(h, new HashMap<>());
+
+            for(Map.Entry<String, Worker> e : ee.getValue().entrySet()){
+
+                workers.get(h).put(e.getKey(), e.getValue().clone());
+            }
+        }
+        return workers;
+    }
+
+    /**
+     * Verifies if a specific worker exists, given their hierarchy and username
+     * @param h
+     * @param user
+     * @return
+     */
     public boolean hasWorker(Hierarchy h, String user){
 
         return this.workersDAO.get(h).containsKey(user);
     }
 
+    /**
+     * Updates a technician's availability
+     * @param t
+     * @param flag
+     */
     public void updateAvaibility(Technician t, boolean flag){
         t.setAvailability(flag);
     }
 
+    /**
+     * Verifies if there is any worker with a given username and password, and then
+     * returns it
+     * @param user
+     * @param pass
+     * @return
+     */
     public Worker confirmWorker(String user, String pass){
 
         for(Map.Entry<Hierarchy, Map<String, Worker>> e : this.workersDAO.entrySet()){
@@ -56,7 +101,6 @@ public class WorkersDAO implements Serializable {
         return null;
     }
 
-
     /**
      * Gets the number of workers saved on system
      * @return
@@ -64,14 +108,11 @@ public class WorkersDAO implements Serializable {
     public int getSize(){
 
         int counter = 0;
-
         for(Map.Entry<Hierarchy, Map<String,Worker>> e : this.workersDAO.entrySet()){
-
             counter += e.getValue().size();
         }
         return counter;
     }
-
 
     /**
      * Add a new worker to database
@@ -126,12 +167,23 @@ public class WorkersDAO implements Serializable {
         return null;
     }
 
+    /**
+     * Gets the map of all users by their hierarchy
+     * @param h
+     * @return
+     */
     public Map<String, Worker> get(Hierarchy h){
 
-        return this.workersDAO.get(h);
-        // TODO clone???
-    }
+        Map<String, Worker> answer = new HashMap<>();
 
+        Map<String, Worker> reallist = this.workersDAO.get(h);
+
+        for(Map.Entry<String, Worker> e : reallist.entrySet()){
+            answer.put(e.getKey(), e.getValue().clone());
+        }
+
+        return answer;
+    }
 
 
     /**
@@ -155,7 +207,13 @@ public class WorkersDAO implements Serializable {
         return false;
     }
 
-
+    /**
+     * Updates the number of deliveries made by a counter worker
+     * @param h
+     * @param user
+     * @param clientID
+     * @return
+     */
     public boolean updateDeliveries(Hierarchy h, String user, String clientID){
         Counter c = (Counter)this.workersDAO.get(h).get(user);
         c.updateEntregas(clientID);

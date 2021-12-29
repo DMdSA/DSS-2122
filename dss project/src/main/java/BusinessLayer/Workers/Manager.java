@@ -31,22 +31,12 @@ public class Manager extends Worker{
         this.setHierarchy(m.getHierarchy());
     }
 
+    /**
+     * Clone
+     */
     public Manager clone(){
         return new Manager(this);
     }
-
-    /**
-     * Getters
-     */
-
-
-
-
-
-    /**
-     * Setters
-     */
-
 
     /**
      * toString
@@ -67,7 +57,6 @@ public class Manager extends Worker{
         return sb.toString();
     }
 
-
     /**
      * equals
      */
@@ -80,5 +69,4 @@ public class Manager extends Worker{
 
         return super.equals(that);
     }
-
 }
