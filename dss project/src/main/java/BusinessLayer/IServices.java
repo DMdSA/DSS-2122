@@ -13,9 +13,7 @@ public interface IServices {
 
     boolean registerExpressService();
 
-    boolean update_budget(Budget b, double new_price, List<Triplet<String, LocalTime, Double>> new_passos, BudgetStatus new_budgetStatus);
-
-    void view_passos(Budget b);
+    boolean update_budget(Budget b, double new_price, List<Triplet<String, String, Double>> new_passos, BudgetStatus new_budgetStatus);
 
     boolean registerBudgetRequest(WorkersFacade wf, Service service);
 

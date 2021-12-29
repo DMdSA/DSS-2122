@@ -294,6 +294,12 @@ public class WorkersUI {
         return flag;
     }
 
+    /**
+     * Auxiliar Menu to Tech choose his new task
+     * @param username
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public void isTechWorking(String username) throws IOException, ClassNotFoundException {
         clearview();
         List<Budget> budgets_pending = this.shopUI.getServices_facade().Repairing_budgets(username);  //List of budgets the user is doing budget or repairing
@@ -316,7 +322,7 @@ public class WorkersUI {
             choose_work.setHandler(3, () -> this.Work_on_hold(budgets_onhold.get(0)));
             choose_work.run();
 
-        } else{
+        } else{                                                                                       //If the tech is already working on somethings, shows that work's menu
                 if(budgets_pending.get(0).getStatus() == BudgetStatus.DOING_BUDGET){
                     doing_budget_menu(budgets_pending.get(0), username);
                 }
@@ -326,6 +332,12 @@ public class WorkersUI {
          }
     }
 
+    /**
+     * Auxiliar Function to put a Tech working on a Budget or Reparation
+     * @param bs Budget Status to know if the tech will do a budget or on a reparation
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public void Work_on_budgets(BudgetStatus bs) throws IOException, ClassNotFoundException {
         this.shopUI.getWorkers_facade().update_worker_availability(shopUI.getUsername(),false);
         Budget b = this.shopUI.getServices_facade().putTechWorking(bs,shopUI.getUsername());
@@ -336,6 +348,12 @@ public class WorkersUI {
         shopUI.MainMenu();
     }
 
+    /**
+     * Auxiliar function to put a certain Tech continuing a on_hold reparation
+     * @param b Budget the Tech will work on
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public void Work_on_hold(Budget b) throws IOException, ClassNotFoundException {
         this.shopUI.getServices_facade().continue_reparation(b);
         System.out.println("Now doing a new task");
@@ -345,9 +363,16 @@ public class WorkersUI {
         shopUI.MainMenu();
     }
 
+    /**
+     * Auxiliar Menu with budget work options
+     * @param b Budget the Tech's working on
+     * @param username Tech's username
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public void doing_budget_menu(Budget b, String username) throws IOException, ClassNotFoundException {
         clearview();
-        Menu choose_work_budget = new Menu("Choose Work",
+        Menu choose_work_budget = new Menu("Budget Work",
                 Arrays.asList(
                         "Back"
                         , "View Steps"
@@ -355,7 +380,7 @@ public class WorkersUI {
                         , "Rewrite Step"
                         , "Finish Budget"
                 ));
-        choose_work_budget.setPreCondition(3,() -> (b.getTodo().size() > 0));
+        choose_work_budget.setPreCondition(3,() -> (b.getTodo().size() > 0)); //Only lets rewrite steps if there's at least 1 step
 
         choose_work_budget.setHandler(0,() -> this.shopUI.MainMenu());
         choose_work_budget.setHandler(1,() -> this.View_steps(b));
@@ -365,6 +390,10 @@ public class WorkersUI {
         choose_work_budget.run();
     }
 
+    /**
+     * Auxiliar Function to view the steps of a budget
+     * @param b Budget the Tech's working on
+     */
     public void View_steps(Budget b){
         if(b.getTodo().size() == 0){
             System.out.println("There isn't any steps yet");
@@ -372,7 +401,7 @@ public class WorkersUI {
         else{
             int counter = 1;
             clearview();
-            for(Triplet<String, LocalTime,Double> e : b.getTodo()){
+            for(Triplet<String, String,Double> e : b.getTodo()){
                 System.out.println("------Step no." + counter + "------");
                 System.out.println("Description: " + e.getValue0());
                 System.out.println("Time: " + e.getValue1());
@@ -384,10 +413,14 @@ public class WorkersUI {
         clearview();
     }
 
+    /**
+     * Auxiliar Function to add a new Step
+     * @param b Budget Tech is working on
+     */
     public void Add_steps(Budget b){
         boolean flag = true;
         double price = b.getEstimatedPrice();
-        List<Triplet<String, LocalTime, Double>> aux = b.getTodo();
+        List<Triplet<String, String, Double>> aux = b.getTodo();
         while (flag) {
             clearview();
             System.out.print("Introduz a descrição do passo: ");
@@ -398,7 +431,7 @@ public class WorkersUI {
             String aux_price = shopUI.getScanner().nextLine();
             try {
                 price = price + Double.parseDouble(aux_price);
-                aux.add(new Triplet(aux_s, dtf.parse(aux_time), Double.parseDouble(aux_price)));
+                aux.add(new Triplet(aux_s, dtf.parse(aux_time).toString(), Double.parseDouble(aux_price)));
             } catch (DateTimeParseException dateTimeParseException) {
                 System.out.println("Data invalida");
                 this.shopUI.pause();
@@ -414,8 +447,12 @@ public class WorkersUI {
         this.shopUI.getServices_facade().update_budget(b,price,aux,b.getStatus());
     }
 
+    /**
+     * Auxiliar function to rewrite a given step, including the description, updating the estimated price
+     * @param b Budget Tech is working on
+     */
     public void Rewrite_step(Budget b) {
-        List<Triplet<String ,LocalTime,Double>> aux = b.getTodo();
+        List<Triplet<String ,String,Double>> aux = b.getTodo();
         int n_steps = b.getTodo().size();
         int choice = 0;
         double old_price = 0;
@@ -435,7 +472,7 @@ public class WorkersUI {
             System.out.print("Introduz o custo do passo: ");
             String aux_price = shopUI.getScanner().nextLine();
             try {
-                aux.set(choice - 1, new Triplet(aux_s, dtf.parse(aux_time), Double.parseDouble(aux_price)));
+                aux.set(choice - 1, new Triplet(aux_s, dtf.parse(aux_time).toString(), Double.parseDouble(aux_price)));
                 old_price = old_price - Double.parseDouble(aux_price);
             } catch (DateTimeParseException dateTimeParseException) {
                 System.out.println("Data invalida");
@@ -445,6 +482,13 @@ public class WorkersUI {
         this.shopUI.getServices_facade().update_budget(b,b.getEstimatedPrice()-old_price,aux,b.getStatus());
     }
 
+    /**
+     * Auxiliar function for when a Tech finishes a budget
+     * @param b Budget Tech is working on
+     * @param username Tech's username
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public void Finish_budget(Budget b, String username) throws IOException, ClassNotFoundException {
         System.out.println("Confirmation: Press 1 to finish the budget");
         int choice = Integer.parseInt(shopUI.getScanner().nextLine());
@@ -455,9 +499,16 @@ public class WorkersUI {
         }
     }
 
+    /**
+     * Menu with the Repair options
+     * @param b Budget refering to the equipment Tech is repairing
+     * @param username Tech's username
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public void repairing_menu(Budget b, String username) throws IOException, ClassNotFoundException {
         clearview();
-        Menu repair = new Menu("Repair",
+        Menu repair = new Menu("Repair Work",
                 Arrays.asList(
                         "Back"
                         ,"Show steps"
@@ -466,19 +517,24 @@ public class WorkersUI {
                         ,"Put on Wait"
                         ,"Finish Repair"
                 ));
-        repair.setPreCondition(2,() -> (b.getTodo().size() > 0));
+        repair.setPreCondition(2,() -> (b.getTodo().size() > 0)); //Only lets rewrite if there is at least 1 step
 
         repair.setHandler(0,() -> shopUI.MainMenu());
         repair.setHandler(1,() -> this.View_steps(b));
         repair.setHandler(2,() -> this.Rewrite_step_values(b,username));
-        repair.setHandler(3,() -> this.Repair_impossible(b,username));
-        repair.setHandler(4,() -> this.Put_in_wait(b,username));
-        repair.setHandler(5,() -> this.Finish_repair(b,username));
+        repair.setHandler(3,() -> this.Repair_action(b,username, BudgetStatus.WAITING_PICKUP));
+        repair.setHandler(4,() -> this.Repair_action(b,username,BudgetStatus.ON_HOLD));
+        repair.setHandler(5,() -> this.Repair_action(b,username,BudgetStatus.WAITING_PICKUP));
         repair.run();
     }
 
+    /**
+     * Auxiliar function to rewrite the values of a given step.
+     * @param b Budget refering to the equipment Tech is repairing
+     * @param username Tech's username
+     */
     public void Rewrite_step_values(Budget b, String username){
-        List<Triplet<String ,LocalTime,Double>> aux = b.getTodo();
+        List<Triplet<String ,String,Double>> aux = b.getTodo();
         int n_steps = b.getTodo().size();
         int choice;
         this.View_steps(b);
@@ -494,7 +550,7 @@ public class WorkersUI {
             System.out.print("Introduz o custo do passo: ");
             String aux_price = shopUI.getScanner().nextLine();
             try {
-                aux.set(choice - 1, new Triplet(b.getTodo().get(choice-1).getValue0(), dtf.parse(aux_time), Double.parseDouble(aux_price)));
+                aux.set(choice - 1, new Triplet(b.getTodo().get(choice-1).getValue0(), dtf.parse(aux_time).toString(), Double.parseDouble(aux_price)));
                 is_price_bigger_than_expected(b,username,aux);
             } catch (DateTimeParseException dateTimeParseException) {
                 System.out.println("Data invalida");
@@ -506,11 +562,18 @@ public class WorkersUI {
         this.shopUI.getServices_facade().update_budget(b,b.getEstimatedPrice(),aux,b.getStatus());
     }
 
-
-    public void is_price_bigger_than_expected(Budget b, String username, List<Triplet<String, LocalTime, Double>> aux) throws IOException, ClassNotFoundException {
+    /**
+     * Verifies if after each Rewrite the real_price is <120% of the original budget. If it is, locks the repair until the client answers
+     * @param b Budget refering to the equipment Tech is repairing
+     * @param username Tech's username
+     * @param aux The list of steps updated
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    public void is_price_bigger_than_expected(Budget b, String username, List<Triplet<String, String, Double>> aux) throws IOException, ClassNotFoundException {
 
         double real_price = 0;
-        for(Triplet<String,LocalTime,Double> a : aux) {
+        for(Triplet<String,String,Double> a : aux) {
             real_price = real_price + a.getValue2();
         }
 
@@ -524,40 +587,120 @@ public class WorkersUI {
     }
 
     /**
-     * i need a comment
-     * @param b
-     * @param username
+     * User takes an action (put on_hold, waiting for pickup because repair is impossible or because its finished)
+     * @param b Budget refering to the equipment Tech is repairing
+     * @param username Tech's username
+     * @param bs new BudgetStatus
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public void Repair_impossible(Budget b, String username) throws IOException, ClassNotFoundException {
-        System.out.println("Confirmation: Press 1 to confirm impossible reparation");
+    public void Repair_action(Budget b, String username, BudgetStatus bs) throws IOException, ClassNotFoundException {
+        System.out.println("Confirmation: Press 1 to confirm action");
         int choice = Integer.parseInt(shopUI.getScanner().nextLine());
         if(choice == 1){
-            this.shopUI.getServices_facade().updateBudgetStatus(b,BudgetStatus.WAITING_PICKUP);
-            this.shopUI.getWorkers_facade().update_worker_availability(username,true);
-            //TODO MAIL A CLIENTE !!!!!!!!!!!!!!!!!!!!!!!!!!
-            shopUI.MainMenu();
-        }
-    }
-
-    public void Put_in_wait(Budget b, String username) throws IOException, ClassNotFoundException {
-        System.out.println("Confirmation: Press 1 to put repair in wait");
-        int choice = Integer.parseInt(shopUI.getScanner().nextLine());
-        if(choice == 1){
-            this.shopUI.getServices_facade().updateBudgetStatus(b,BudgetStatus.ON_HOLD);
+            this.shopUI.getServices_facade().updateBudgetStatus(b,bs);
             this.shopUI.getWorkers_facade().update_worker_availability(username,true);
             shopUI.MainMenu();
         }
     }
 
-    public void Finish_repair(Budget b, String username) throws IOException, ClassNotFoundException {
-        System.out.println("Confirmation: Press 1 to finish the budget");
-        int choice = Integer.parseInt(shopUI.getScanner().nextLine());
-        if(choice == 1){
-            this.shopUI.getServices_facade().updateBudgetStatus(b,BudgetStatus.WAITING_PICKUP);
-            this.shopUI.getWorkers_facade().update_worker_availability(username,true);
-            shopUI.MainMenu();
+    /**
+     * Menu responsible for giving shop's workers statistics to the manager
+     */
+    void StatisticsMenu() throws IOException, ClassNotFoundException {
+
+        clearview();
+        Menu statistics = new Menu("Statistics",
+                Arrays.asList(
+                        "Back"
+                        , "Counters"
+                        , "Counter by user"
+                        , "Technicians"
+                        , "Technician by user"
+                ));
+
+        statistics.setHandler(0, shopUI::MainMenu);
+        statistics.setHandler(1, () -> AllWorkersStatistics(Hierarchy.COUNTER));
+        statistics.setHandler(2, () -> WorkerStatistics(Hierarchy.COUNTER));
+        statistics.setHandler(3, () -> AllWorkersStatistics(Hierarchy.TECHNICIAN));
+        statistics.setHandler(4, () -> WorkerStatistics(Hierarchy.TECHNICIAN));
+        statistics.run();
+    }
+
+    /**
+     * Prints a specific worker's statistics
+     * @param h
+     */
+    private void WorkerStatistics(Hierarchy h){
+
+        clearview();
+        String user = null;
+        System.out.print("Worker username: ");
+        user = this.shopUI.getScanner().nextLine();
+
+        // If the worker exists, it is printed
+        if(this.shopUI.getWorkers_facade().hasWorker(h, user)){
+
+            Worker w = this.shopUI.getWorkers_facade().getWorker(h, user);
+            System.out.println("\n#> Got worker: " + w.toString() +"\n");
+
+            if(w instanceof Counter){
+
+                Counter c = (Counter) w;
+                Pair<Integer,Integer> pair = this.shopUI.getWorkers_facade().getCounterStatistics(c);
+                System.out.println("#> [Receptions]: " + pair.getValue0() + "  [Deliveries]: " + pair.getValue1() + "\n");
+            }
+
+            if(w instanceof Technician){
+
+                System.out.println("#> tech statistics");
+
+                // budgets that he worked on
+                List<Budget> tech_budgets = this.shopUI.getServices_facade().getTechBudgets(w);
+
+                int size = tech_budgets.size();
+                int index = 0;
+
+                List<Pair<Budget, List<Triplet<String,String,Double>>>> tech_stats = new ArrayList<>();
+
+                for(Budget b : tech_budgets) {
+                    List<Triplet<String, String, Double>> todo = tech_budgets.get(index).getTodo();
+
+                    tech_stats.add(new Pair<>(tech_budgets.get(index), todo));
+                    index++;
+                }
+
+                Book.Show_book(Arrays.asList(tech_stats.toArray()));
+
+                // todo technicians statistics re
+
+            }
+
+            this.shopUI.pause();
+            clearview();
+        }
+        else{
+            System.out.println("error: That worker is not registered");
+            shopUI.pause();
+            clearview();
+        }
+    }
+
+    private void AllWorkersStatistics(Hierarchy h){
+
+
+        if(h.equals(Hierarchy.COUNTER)){
+
+            List<Triplet<String, Integer, Integer>> counter_stats = this.shopUI.getWorkers_facade().getCountersStats();
+            Book.Show_book(Arrays.asList(counter_stats.toArray()));
+        }
+
+        else if(h.equals(Hierarchy.TECHNICIAN)){
+
+            List<String> techs = this.shopUI.getWorkers_facade().getListTechs();
+            List<Triplet<String,Integer,Integer>> tech_stats = this.shopUI.getServices_facade().getTechStats(techs);
+            Book.Show_book(Arrays.asList(tech_stats.toArray()));
+
         }
     }
 

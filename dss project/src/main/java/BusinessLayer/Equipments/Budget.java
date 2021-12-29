@@ -21,7 +21,7 @@ public class Budget implements Comparable<Budget>, Serializable {
     private String tech_username_budget;                                        // Technician username who did budget
     private String tech_username_repair;                                        // Technician username who did repair
     private LocalDate requestDate;                                              // Data pedido
-    private List<Triplet<String, LocalTime, Double>> estimatedTODO;             // Passos
+    private List<Triplet<String, String, Double>> estimatedTODO;             // Passos
     private BudgetStatus status;                                                // Status
     private boolean express;
 
@@ -35,8 +35,8 @@ public class Budget implements Comparable<Budget>, Serializable {
         this.clientID = clientID;
         this.equip = e;
         this.estimatedPrice = 0;
-        this.tech_username_budget = null;
-        this.tech_username_repair = null;
+        this.tech_username_budget = "";
+        this.tech_username_repair = "";
         this.requestDate = LocalDate.now();
         this.estimatedTODO = new ArrayList<>();
         this.status = BudgetStatus.WITHOUT_BUDGET;
@@ -50,8 +50,8 @@ public class Budget implements Comparable<Budget>, Serializable {
         this.clientID = clientId;
         this.equip = e;
         this.estimatedPrice = estimatedPrice;
-        this.tech_username_budget = null;
-        this.tech_username_repair = null;
+        this.tech_username_budget = "";
+        this.tech_username_repair = "";
         this.requestDate = LocalDate.now();
         this.estimatedTODO = new ArrayList<>();
         this.status = BudgetStatus.WAITING_REPAIR;
@@ -106,7 +106,7 @@ public class Budget implements Comparable<Budget>, Serializable {
     public String getTech_username_budget(){ return this.tech_username_budget;}
     public String getTech_username_repair(){ return this.tech_username_repair;}
     public LocalDate getRequestDate(){ return this.requestDate;}
-    public List<Triplet<String, LocalTime, Double>> getTodo(){ return new ArrayList<>(this.estimatedTODO);}
+    public List<Triplet<String, String, Double>> getTodo(){ return new ArrayList<>(this.estimatedTODO);}
     public BudgetStatus getStatus(){ return this.status;}
     public boolean getExpress(){ return this.express;}
 
@@ -130,7 +130,7 @@ public class Budget implements Comparable<Budget>, Serializable {
     public void setTech_username_repair(String user){
         this.tech_username_repair = user;
     }
-    public void setTodo(List<Triplet<String,LocalTime,Double>> list){
+    public void setTodo(List<Triplet<String,String,Double>> list){
         this.estimatedTODO = list;
     }
     public void setStatus(BudgetStatus status){

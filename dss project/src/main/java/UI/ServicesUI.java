@@ -3,6 +3,7 @@ import BusinessLayer.Equipments.Budget;
 import BusinessLayer.Equipments.BudgetStatus;
 import BusinessLayer.Equipments.ExpressRepair;
 import BusinessLayer.Service;
+import BusinessLayer.Workers.Hierarchy;
 import org.javatuples.Triplet;
 
 import java.io.IOException;
@@ -235,7 +236,7 @@ public class ServicesUI {
     private void change_passos_budget(Budget b) {
 
         boolean flag = true;
-        List<Triplet<String, LocalTime, Double>> new_passos = new ArrayList<>();
+        List<Triplet<String, String, Double>> new_passos = new ArrayList<>();
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("H:mm:ss"); //formatter to convert from string to LocalTime
         while (flag) {
@@ -246,7 +247,7 @@ public class ServicesUI {
             System.out.print("Introduz o custo do passo: ");
             String aux_price = shopUI.getScanner().nextLine();
             try {
-                new_passos.add(new Triplet(aux_s, dtf.parse(aux_time), Double.parseDouble(aux_price)));
+                new_passos.add(new Triplet(aux_s, dtf.parse(aux_time).toString(), Double.parseDouble(aux_price)));
             } catch (DateTimeParseException dateTimeParseException) {
                 System.out.println("Data invalida");
                 break;
@@ -259,7 +260,6 @@ public class ServicesUI {
         }
 
         shopUI.getServices_facade().update_budget(b, b.getEstimatedPrice(), new_passos, b.getStatus());
-        shopUI.getServices_facade().view_passos(b); //DEBUGG TODO Remover isto//DEBUGG TODO Remover isto
     }
 
     /**
@@ -312,7 +312,7 @@ public class ServicesUI {
     /**
      * Menu that shows the available options for seeing the express services available
      */
-    void ConsultExpressServicesMenu() throws IOException, ClassNotFoundException {
+    void ConsultExpressServicesMenu(Hierarchy h) throws IOException, ClassNotFoundException {
 
         clearview();
         Menu express_services = new Menu("Search Express Services",
@@ -321,6 +321,7 @@ public class ServicesUI {
                         , "Consult all services"
                         , "Consult service"
                 ));
+        express_services.setPreCondition(2, ()->(h.equals(Hierarchy.COUNTER)));
 
         express_services.setHandler(0, shopUI::MainMenu);
         express_services.setHandler(1, this::ConsultExpressServices);
@@ -383,7 +384,7 @@ public class ServicesUI {
                         , "Confirm"
                 ));
 
-        register_express.setHandler(0, this::ConsultExpressServicesMenu);
+        register_express.setHandler(0, () -> ConsultExpressServicesMenu(this.shopUI.getHierarchy_logged()));
         register_express.setHandler(1, () -> RegisterExpressService(er));
         register_express.run();
     }

@@ -6,9 +6,12 @@ import BusinessLayer.Workers.Worker;
 import DataBase.ClientDAO;
 import DataBase.WorkersDAO;
 import org.javatuples.Pair;
+import org.javatuples.Triplet;
 
 import java.io.*;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 
@@ -170,7 +173,49 @@ public class WorkersFacade implements IWorkers, Serializable {
         workers_dao.updateAvaibility(aux,flag);
     }
 
+    /**
+     * Calculates a list of all counter workers with their number of receptions
+     * and deliveries made to clients
+     * @return
+     */
+    public List<Triplet<String, Integer, Integer>> getCountersStats() {
 
+        // get todos os counters registados
+        Map<String, Worker> workers = this.getWorkers().get(Hierarchy.COUNTER);
+
+        // lista onde ficarão os stats de todos os workers
+        List<Triplet<String, Integer, Integer>> each_stats = new ArrayList<>();
+
+        for (Map.Entry<String, Worker> e : workers.entrySet()) {
+
+            // cada counter
+            Counter c = (Counter) e.getValue();
+            // receber o seu username
+            String user = c.getUser();
+            // calcular o total de rececoes e entregas
+            int rececao = 0;
+            int entrega = 0;
+
+            Map<String, Pair<Integer, Integer>> rececao_entrega = c.getStatistics();
+            // para cada cliente que já tenha atentido, calcula a soma das rececoes e entregas
+            for (Map.Entry<String, Pair<Integer, Integer>> ee : rececao_entrega.entrySet()) {
+                rececao += ee.getValue().getValue0();
+                entrega += ee.getValue().getValue1();
+            }
+            each_stats.add(new Triplet<>(user, rececao, entrega));
+        }
+
+        return each_stats;
+    }
+
+    /**
+     * Auxiliar Funcion to get the List of all tech's usernames
+     * @return list of usernames
+     */
+    public List<String> getListTechs(){
+        Map<String,Worker> map_techs = workers_dao.get(Hierarchy.TECHNICIAN);
+        return map_techs.keySet().stream().toList();
+    }
 
 
     /**

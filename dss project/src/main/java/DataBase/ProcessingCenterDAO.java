@@ -60,6 +60,27 @@ public class ProcessingCenterDAO implements Serializable {
     }
 
     /**
+     * Gets all the budgets worker on by a specific Technician
+     * @param username
+     * @return
+     */
+    public List<Budget> getTechnicianBudgets(String username){
+
+        List<Budget> budgets = new ArrayList<>();
+        for(Map.Entry<BudgetStatus, Map<UUID, Budget>> entry : this.budgets.entrySet()){
+
+            for(Map.Entry<UUID, Budget> e : entry.getValue().entrySet()){
+
+                if(e.getValue().getTech_username_budget().equals(username)
+                        || e.getValue().getTech_username_repair().equals(username)){
+                    budgets.add(e.getValue());
+                }
+            }
+        }
+        return budgets;
+    }
+
+    /**
      * Get by Client's ID
      */
     public List<Budget> get(String clientId){

@@ -1,6 +1,4 @@
 package UI;
-
-
 import BusinessLayer.Client;
 import BusinessLayer.Equipments.Budget;
 import BusinessLayer.Equipments.ExpressRepair;
@@ -79,11 +77,12 @@ public class Book {
     }
 
 
+
     /**
      * Auxiliar function that controls the flow of the book
      * @param list List of objects to be shown
      */
-    private static void Show_book(List<Object> list){
+    static void Show_book(List<Object> list){
 
         int number = list.size();
 
@@ -168,5 +167,4 @@ public class Book {
             }
         }
     }
-
 }

@@ -20,8 +20,6 @@ public class Service {
     private Equipment equipment;
     private Budget budget;
     private boolean isExpress;
-    private List<Triplet<String, LocalTime,Double>> passos_real;
-    private double preco_real;
 
 
 
@@ -34,8 +32,6 @@ public class Service {
         this.equipment = new Equipment(EquipmentDescription, this.clientID, counterId);
         this.isExpress = false;
         this.budget = new Budget(this.clientID, this.equipment);
-        this.passos_real = new ArrayList<>();
-        this.preco_real = 0;
     }
 
 
@@ -65,12 +61,6 @@ public class Service {
 
     public boolean getIsExpress(){ return this.isExpress;}
 
-    public double getPreco_real(){return this.preco_real;}
-
-    public List<Triplet<String,LocalTime,Double>> getPassos_real(){
-        return this.passos_real;
-    }
-
     /**
      * Setters
      */
@@ -81,14 +71,6 @@ public class Service {
         this.budget.setClientID(clientID);
     }
     // Faz sentido haver mais setters?
-
-    public void setPassos_real(List<Triplet<String,LocalTime,Double>> passos_real){
-        this.passos_real = passos_real;
-    }
-
-    public void setPreco_real(double preco_real){
-        this.preco_real = preco_real;
-    }
 
 
     /**

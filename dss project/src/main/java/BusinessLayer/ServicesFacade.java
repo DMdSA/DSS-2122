@@ -5,6 +5,7 @@ import BusinessLayer.Equipments.BudgetStatus;
 import BusinessLayer.Equipments.ExpressRepair;
 import BusinessLayer.Workers.Counter;
 import BusinessLayer.Workers.Hierarchy;
+import BusinessLayer.Workers.Worker;
 import DataBase.ExpressServicesDAO;
 import DataBase.ProcessingCenterDAO;
 import org.javatuples.Triplet;
@@ -62,7 +63,7 @@ public class ServicesFacade implements IServices, Serializable {
      * Otherwise, it will remove it from its previous line of BudgetStatus and add it to the new one
      *
      */
-    public boolean update_budget(Budget b, double new_price, List<Triplet<String, LocalTime, Double>> new_passos, BudgetStatus new_budgetStatus){
+    public boolean update_budget(Budget b, double new_price, List<Triplet<String, String, Double>> new_passos, BudgetStatus new_budgetStatus){
 
         b.setEstimatedPrice(new_price);
         b.setTodo(new_passos);
@@ -78,15 +79,23 @@ public class ServicesFacade implements IServices, Serializable {
         processingCenter_dao.update(b);
     }
 
-
-    public void view_passos(Budget b){ //Debug
-        Budget aux = processingCenter_dao.get(b.getBudgetID());
-        for(int i = 0; i < aux.getTodo().size(); i++){
-            System.out.println(aux.getTodo().get(i).getValue0());
-            System.out.println(aux.getTodo().get(i).getValue1());
-            System.out.println(aux.getTodo().get(i).getValue2());
-            System.out.println();
+    /**
+     * Auxiliar Function to get the number of budgets and reparations of the techs
+     * @param list_techs list of all the techs' username
+     * @return List with all the information about the techs' statistics
+     */
+    public List<Triplet<String, Integer,Integer>> getTechStats(List<String> list_techs){
+        List<Triplet<String,Integer,Integer>> statistics = new ArrayList<>();
+        for(String s : list_techs) {
+            //Numero de todos os budgets e reparacoes que o Tech trabalhou
+            int all = processingCenter_dao.getTechnicianBudgets(s).size();
+            //Numero dos budgets
+            int budgets = processingCenter_dao.getByUsername(s).size();
+            //Numero das reparacoes
+            int repair = all - budgets;
+            statistics.add(new Triplet<>(s,budgets,repair));
         }
+        return statistics;
     }
 
 
@@ -177,6 +186,18 @@ public class ServicesFacade implements IServices, Serializable {
         return (this.processingCenter_dao.get_by_state(budgetStatus).size() > 0);
     }
 
+    /**
+     * Gets a technicians's budgets (that he worked on)
+     * @param w
+     * @return
+     */
+    public List<Budget> getTechBudgets(Worker w){
+
+        String username = w.getUser();
+
+        return this.processingCenter_dao.getTechnicianBudgets(username);
+    }
+
 
     /**
      * Gets all budgets associated with a specific budget status
@@ -207,20 +228,39 @@ public class ServicesFacade implements IServices, Serializable {
     }
 
 
-
-
+    /**
+     * Gets the first element from the given BudgetStatus' list, which is the oldest budget in that list
+     * @param b
+     * @return
+     */
     public Budget get_first(BudgetStatus b){
         return this.processingCenter_dao.getFirst(b);
     }
 
+    /**
+     * Puts the status of a Budget ON_HOLD
+     * @param username
+     * @return
+     */
     public List<Budget> On_Hold_Budgets(String username){
         return this.processingCenter_dao.get_by_user_and_status_repair(username,BudgetStatus.ON_HOLD);
     }
 
+    /**
+     * Updates the State of a Budget to REPAIRING
+     * @param b
+     */
     public void continue_reparation(Budget b){
         this.processingCenter_dao.update(b,BudgetStatus.REPAIRING);
     }
 
+    /**
+     * Auxiliar Function to, depending on the Tech's choice, gives him the oldest Budget in WITHOUT_BUDGET
+     * or in WAITING_REPAIR
+     * @param budgetStatus Status to know if Tech is going to do a budget or reparation
+     * @param username Tech's username
+     * @return Budget the Tech will work on
+     */
     public Budget putTechWorking(BudgetStatus budgetStatus, String username){
         Budget b = get_first(budgetStatus);
 

@@ -50,6 +50,9 @@ public class ShopUI {
     ServicesFacade getServices_facade(){
         return this.services_facade;            //todo clone?
     }
+    Hierarchy getHierarchy_logged(){
+        return this.hierarchy_logged;
+    }
 
     Scanner getScanner(){
         return this.getInput;
@@ -180,7 +183,7 @@ public class ShopUI {
         CounterMenu.setHandler(1, clientsUI::consult_client);
         CounterMenu.setHandler(2, clientsUI::RegisterClient);
         CounterMenu.setHandler(3, servicesUI::RegisterNormalService);
-        CounterMenu.setHandler(4, servicesUI::ConsultExpressServicesMenu);
+        CounterMenu.setHandler(4, () -> servicesUI.ConsultExpressServicesMenu(hierarchy_logged));
         CounterMenu.setHandler(5, servicesUI::ConsultBudgetRequest);
         CounterMenu.setHandler(6, () -> this.workersUI.checkTechAvailability());
         CounterMenu.setHandler(7, servicesUI::PaymentMenu);
@@ -207,7 +210,7 @@ public class ShopUI {
 
         TechnicianMenu.setHandler(0, this::LoginMenu);
         TechnicianMenu.setHandler(1, servicesUI::ConsultBudgetRequest);
-        TechnicianMenu.setHandler(2, servicesUI::ConsultExpressServicesMenu);
+        TechnicianMenu.setHandler(2, () -> servicesUI.ConsultExpressServicesMenu(hierarchy_logged));
         TechnicianMenu.setHandler(3, ()->workersUI.isTechWorking(this.username));
         TechnicianMenu.setHandler(4, this::Save);
         TechnicianMenu.setHandler(5, this::Load);
@@ -218,28 +221,31 @@ public class ShopUI {
 
         Menu ManagerMenu = new Menu("Manager - [@"+this.username+"]",
                 Arrays.asList(
-                          "Exit"                                                // 0 TODO
+                        "Exit"                                                // 0 TODO
                         , "Consult Worker"                                      // 1
                         , "Register Worker"                                     // 2
                         , "Consult Client"                                      // 3
                         , "Consult Service Requests"                            // 4
                         , "Available Express Services"                          // 5
-                        , "Save"                                                // 6
-                        , "Load"                                                // 7
+                        , "Statistics"                                          // 6
+                        , "Save"                                                // 7
+                        , "Load"                                                // 8
                 ));
         ManagerMenu.setPreCondition(1, ()->this.workers_facade.hasWorkers());
         ManagerMenu.setPreCondition(3, ()->this.workers_facade.hasClients());
         ManagerMenu.setPreCondition(4, ()->this.services_facade.hasBudgetRequests());
         ManagerMenu.setPreCondition(5, ()->this.services_facade.hasExpressServices());
+        ManagerMenu.setPreCondition(6, ()->this.workers_facade.hasWorkers());   // não é a resposta correta
 
         ManagerMenu.setHandler(0, this::LoginMenu);
         ManagerMenu.setHandler(1, workersUI::ConsultWorker);
         ManagerMenu.setHandler(2, workersUI::RegisterWorkerMenu);
         ManagerMenu.setHandler(3, clientsUI::consult_client);
-        ManagerMenu.setHandler(4, servicesUI:: ConsultBudgetRequest);
-        ManagerMenu.setHandler(5, servicesUI::ConsultExpressServicesMenu);
-        ManagerMenu.setHandler(6, this::Save);
-        ManagerMenu.setHandler(7, this::Load);
+        ManagerMenu.setHandler(4, servicesUI::ConsultBudgetRequest);
+        ManagerMenu.setHandler(5, () -> servicesUI.ConsultExpressServicesMenu(hierarchy_logged));
+        ManagerMenu.setHandler(6, () -> workersUI.StatisticsMenu());
+        ManagerMenu.setHandler(7, this::Save);
+        ManagerMenu.setHandler(8, this::Load);
         ManagerMenu.run();
     }
 
