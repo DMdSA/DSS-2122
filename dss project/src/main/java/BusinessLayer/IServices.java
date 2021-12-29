@@ -2,7 +2,6 @@ package BusinessLayer;
 import BusinessLayer.Equipments.Budget;
 import BusinessLayer.Equipments.BudgetStatus;
 import BusinessLayer.Equipments.ExpressRepair;
-import BusinessLayer.Services.Service;
 import org.javatuples.Triplet;
 import java.io.IOException;
 import java.time.LocalTime;
@@ -14,7 +13,7 @@ public interface IServices {
 
     boolean registerExpressService();
 
-    void update_budget(Budget b, double new_price, List<Triplet<String, LocalTime, Double>> new_passos, BudgetStatus new_budgetStatus);
+    boolean update_budget(Budget b, double new_price, List<Triplet<String, LocalTime, Double>> new_passos, BudgetStatus new_budgetStatus);
 
     void view_passos(Budget b);
 

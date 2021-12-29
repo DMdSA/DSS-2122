@@ -1,18 +1,11 @@
 package BusinessLayer;
 
-import BusinessLayer.Client.Client;
-import BusinessLayer.Equipments.Budget;
-import BusinessLayer.Equipments.BudgetStatus;
-import BusinessLayer.Services.Service;
 import BusinessLayer.Workers.Hierarchy;
 import BusinessLayer.Workers.Worker;
 import DataBase.ClientDAO;
 import DataBase.WorkersDAO;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 
 public interface IWorkers {
 
@@ -57,15 +50,15 @@ public interface IWorkers {
 
     Worker getWorker(Hierarchy h, String user);
 
-    void updateWorkerPhone(Hierarchy h, Worker w, String phone);
+    boolean updateWorkerPhone(Hierarchy h, Worker w, String phone);
 
     public boolean updateClientMail(Client c, String mail);
 
-    void updateWorkerNif(Hierarchy h, Worker w, String nif);
+    boolean updateWorkerNif(Hierarchy h, Worker w, String nif);
 
-    void updateWorkerPass(Hierarchy h, Worker w, String pass);
+    boolean updateWorkerPass(Hierarchy h, Worker w, String pass);
 
-    void updateWorkerName(Hierarchy h, Worker w, String name);
+    boolean updateWorkerName(Hierarchy h, Worker w, String name);
 
     boolean checkTechAvailability();
 

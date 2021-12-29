@@ -5,13 +5,15 @@ import java.io.Serializable;
 public enum BudgetStatus implements Serializable {
 
     WITHOUT_BUDGET(1),
-    WAITING_APPROVAL(2),
-    DECLINED(3),
-    WAITING_REPAIR(4),
-    REPAIRING(5),
-    WAITING_PICKUP(6),
-    DELIVERED(7),
-    ARCHIVED(8);
+    DOING_BUDGET(2),
+    WAITING_APPROVAL(3),
+    DECLINED(4),
+    WAITING_REPAIR(5),
+    REPAIRING(6),
+    ON_HOLD(7),
+    WAITING_PICKUP(8),
+    DELIVERED(9),
+    ARCHIVED(10);
 
     /**
      * Instance Variable
@@ -37,13 +39,15 @@ public enum BudgetStatus implements Serializable {
 
         return switch (this.value){
             case 1 -> "WITHOUT_BUDGET";
-            case 2 -> "WAITING_APPROVAL";
-            case 3 -> "DECLINED";
-            case 4 -> "WAITING_REPAIR";
-            case 5 -> "REPAIRING";
-            case 6 -> "WAITING_PICKUP";
-            case 7 -> "DELIVERED";
-            case 8 -> "ARCHIVED";
+            case 2 -> "DOING_BUDGET";
+            case 3 -> "WAITING_APPROVAL";
+            case 4-> "DECLINED";
+            case 5 -> "WAITING_REPAIR";
+            case 6 -> "REPAIRING";
+            case 7 -> "ON_HOLD";
+            case 8 -> "WAITING_PICKUP";
+            case 9 -> "DELIVERED";
+            case 10 -> "ARCHIVED";
             default -> "?error?";
         };
     }
@@ -51,13 +55,15 @@ public enum BudgetStatus implements Serializable {
     public static BudgetStatus getStatus(int v){
         return switch (v) {
             case 1 -> WITHOUT_BUDGET;
-            case 2 -> WAITING_APPROVAL;
-            case 3 -> DECLINED;
-            case 4 -> WAITING_REPAIR;
-            case 5 -> REPAIRING;
-            case 6 -> WAITING_PICKUP;
-            case 7 -> DELIVERED;
-            case 8 -> ARCHIVED;
+            case 2 -> DOING_BUDGET;
+            case 3 -> WAITING_APPROVAL;
+            case 4 -> DECLINED;
+            case 5 -> WAITING_REPAIR;
+            case 6 -> REPAIRING;
+            case 7 -> ON_HOLD;
+            case 8 -> WAITING_PICKUP;
+            case 9 -> DELIVERED;
+            case 10 -> ARCHIVED;
             default -> null;
         };
     }

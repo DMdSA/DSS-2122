@@ -1,7 +1,7 @@
 package BusinessLayer;
-import BusinessLayer.Client.Client;
 import BusinessLayer.Workers.Counter;
 import BusinessLayer.Workers.Hierarchy;
+import BusinessLayer.Workers.Technician;
 import BusinessLayer.Workers.Worker;
 import DataBase.ClientDAO;
 import DataBase.WorkersDAO;
@@ -132,31 +132,29 @@ public class WorkersFacade implements IWorkers, Serializable {
     }
 
 
-
     @Override
-    public void updateWorkerPhone(Hierarchy h, Worker w, String phone){
+    public boolean updateWorkerPhone(Hierarchy h, Worker w, String phone){
         w.setPhone(phone);
-        this.workers_dao.update(w);
+        return this.workers_dao.update(w);
     }
 
     @Override
-    public void updateWorkerNif(Hierarchy h, Worker w, String nif){
+    public boolean updateWorkerNif(Hierarchy h, Worker w, String nif){
         w.setNif(nif);
-        this.workers_dao.update(w);
+        return this.workers_dao.update(w);
     }
 
     @Override
-    public void updateWorkerPass(Hierarchy h, Worker w, String pass){
+    public boolean updateWorkerPass(Hierarchy h, Worker w, String pass){
         w.setPass(pass);
-        this.workers_dao.update(w);
+        return this.workers_dao.update(w);
     }
 
     @Override
-    public void updateWorkerName(Hierarchy h, Worker w, String name){
+    public boolean updateWorkerName(Hierarchy h, Worker w, String name){
         w.setName(name);
-        this.workers_dao.update(w);
+        return this.workers_dao.update(w);
     }
-
     /**
      * Verifies if the system has any technician available at the moment
      * @return
@@ -166,6 +164,12 @@ public class WorkersFacade implements IWorkers, Serializable {
 
         return this.workers_dao.hasTechAvailable();
     }
+
+    public void update_worker_availability(String username, boolean flag){
+        Technician aux = (Technician) this.workers_dao.get(Hierarchy.TECHNICIAN, username);
+        workers_dao.updateAvaibility(aux,flag);
+    }
+
 
 
 

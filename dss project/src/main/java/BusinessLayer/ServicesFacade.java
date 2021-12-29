@@ -3,7 +3,6 @@ package BusinessLayer;
 import BusinessLayer.Equipments.Budget;
 import BusinessLayer.Equipments.BudgetStatus;
 import BusinessLayer.Equipments.ExpressRepair;
-import BusinessLayer.Services.Service;
 import BusinessLayer.Workers.Counter;
 import BusinessLayer.Workers.Hierarchy;
 import DataBase.ExpressServicesDAO;
@@ -63,16 +62,20 @@ public class ServicesFacade implements IServices, Serializable {
      * Otherwise, it will remove it from its previous line of BudgetStatus and add it to the new one
      *
      */
-    public void update_budget(Budget b, double new_price, List<Triplet<String, LocalTime, Double>> new_passos, BudgetStatus new_budgetStatus){
+    public boolean update_budget(Budget b, double new_price, List<Triplet<String, LocalTime, Double>> new_passos, BudgetStatus new_budgetStatus){
 
-        b.setFinalPrice(new_price);
+        b.setEstimatedPrice(new_price);
         b.setTodo(new_passos);
 
         if(b.getStatus().equals(new_budgetStatus)){
-            processingCenter_dao.update(b);
+            return processingCenter_dao.update(b);
         }
         else
-            processingCenter_dao.update(b, new_budgetStatus);
+            return processingCenter_dao.update(b, new_budgetStatus);
+    }
+
+    public void update_budget(Budget b){
+        processingCenter_dao.update(b);
     }
 
 
@@ -170,6 +173,10 @@ public class ServicesFacade implements IServices, Serializable {
         return (this.processingCenter_dao.globalSize() > 0);
     }
 
+    public boolean hasBudgetRequestByStatus(BudgetStatus budgetStatus){
+        return (this.processingCenter_dao.get_by_state(budgetStatus).size() > 0);
+    }
+
 
     /**
      * Gets all budgets associated with a specific budget status
@@ -188,14 +195,45 @@ public class ServicesFacade implements IServices, Serializable {
 
 
     public boolean updateBudgetStatus(Budget b, BudgetStatus bs) {
+
         return this.processingCenter_dao.update(b, bs);
+    }
+
+    public List<Budget> Repairing_budgets(String username){
+
+        List<Budget> aux = this.processingCenter_dao.get_by_user_and_status_repair(username,BudgetStatus.REPAIRING);
+        aux.addAll(this.processingCenter_dao.get_by_user_and_status_budget(username,BudgetStatus.DOING_BUDGET));
+        return aux;
     }
 
 
 
 
+    public Budget get_first(BudgetStatus b){
+        return this.processingCenter_dao.getFirst(b);
+    }
 
+    public List<Budget> On_Hold_Budgets(String username){
+        return this.processingCenter_dao.get_by_user_and_status_repair(username,BudgetStatus.ON_HOLD);
+    }
 
+    public void continue_reparation(Budget b){
+        this.processingCenter_dao.update(b,BudgetStatus.REPAIRING);
+    }
+
+    public Budget putTechWorking(BudgetStatus budgetStatus, String username){
+        Budget b = get_first(budgetStatus);
+
+        if(budgetStatus == BudgetStatus.WITHOUT_BUDGET) {
+            b.setTech_username_budget(username);
+            this.processingCenter_dao.update(b,BudgetStatus.DOING_BUDGET);
+        }
+        else if(budgetStatus == BudgetStatus.WAITING_REPAIR){
+            b.setTech_username_repair(username);
+            this.processingCenter_dao.update(b,BudgetStatus.REPAIRING);
+        }
+        return b;
+    }
 
 
 

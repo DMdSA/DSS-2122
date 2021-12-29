@@ -1,6 +1,5 @@
 package BusinessLayer.Workers;
 
-import BusinessLayer.Client.Client;
 import org.javatuples.Pair;
 
 import java.util.HashMap;

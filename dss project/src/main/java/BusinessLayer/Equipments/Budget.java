@@ -17,8 +17,9 @@ public class Budget implements Comparable<Budget>, Serializable {
 
     private String clientID;                                                    // Client
     private Equipment equip;                                                    // Equipamento
-    private double finalPrice;                                                  // Preço final
-    private String tech_username;                                               // Technician username
+    private double estimatedPrice;                                              // Preço Estimado pelo Tech
+    private String tech_username_budget;                                        // Technician username who did budget
+    private String tech_username_repair;                                        // Technician username who did repair
     private LocalDate requestDate;                                              // Data pedido
     private List<Triplet<String, LocalTime, Double>> estimatedTODO;             // Passos
     private BudgetStatus status;                                                // Status
@@ -33,8 +34,9 @@ public class Budget implements Comparable<Budget>, Serializable {
         this.budgetID = UUID.randomUUID();
         this.clientID = clientID;
         this.equip = e;
-        this.finalPrice = -1;
-        this.tech_username = null;
+        this.estimatedPrice = 0;
+        this.tech_username_budget = null;
+        this.tech_username_repair = null;
         this.requestDate = LocalDate.now();
         this.estimatedTODO = new ArrayList<>();
         this.status = BudgetStatus.WITHOUT_BUDGET;
@@ -42,13 +44,14 @@ public class Budget implements Comparable<Budget>, Serializable {
     }
 
     // Constructor destinado a pedidos EXPRESSO
-    public Budget(String clientId, Equipment e, double FinalPrice){
+    public Budget(String clientId, Equipment e, double estimatedPrice){
 
         this.budgetID = UUID.randomUUID();
         this.clientID = clientId;
         this.equip = e;
-        this.finalPrice = FinalPrice;
-        this.tech_username = null;
+        this.estimatedPrice = estimatedPrice;
+        this.tech_username_budget = null;
+        this.tech_username_repair = null;
         this.requestDate = LocalDate.now();
         this.estimatedTODO = new ArrayList<>();
         this.status = BudgetStatus.WAITING_REPAIR;
@@ -56,15 +59,16 @@ public class Budget implements Comparable<Budget>, Serializable {
     }
 
 
-    public Budget(String clientID, Equipment e, String tech_username){
+    public Budget(String clientID, Equipment e, String tech_username_budget, String tech_username_repair){
 
         this.budgetID = UUID.randomUUID();
 
         this.clientID = clientID;
         this.equip = e;
-        this.equip.setTechnicianResponsible(this.tech_username);
-        this.finalPrice = -1;
-        this.tech_username = tech_username;
+        this.equip.setTechnicianResponsible(this.tech_username_budget);
+        this.estimatedPrice = 0;
+        this.tech_username_budget = tech_username_budget;
+        this.tech_username_repair = tech_username_repair;
         this.requestDate = LocalDate.now();
         this.estimatedTODO = new ArrayList<>();
         this.status = BudgetStatus.WITHOUT_BUDGET;
@@ -76,8 +80,9 @@ public class Budget implements Comparable<Budget>, Serializable {
         this.budgetID = b.getBudgetID();
         this.clientID = b.getClientID();
         this.equip = b.getEquip();
-        this.finalPrice = b.getFinalPrice();
-        this.tech_username = b.getTech_username();
+        this.estimatedPrice = b.getEstimatedPrice();
+        this.tech_username_budget = b.getTech_username_budget();
+        this.tech_username_repair = b.getTech_username_repair();
         this.requestDate = b.getRequestDate();
         this.estimatedTODO = b.getTodo();
         this.status = b.getStatus();
@@ -97,8 +102,9 @@ public class Budget implements Comparable<Budget>, Serializable {
     public UUID getBudgetID(){return this.budgetID;}
     public String getClientID(){ return this.clientID;}
     public Equipment getEquip(){ return this.equip.clone();}
-    public Double getFinalPrice(){return this.finalPrice;}
-    public String getTech_username(){ return this.tech_username;}
+    public Double getEstimatedPrice(){return this.estimatedPrice;}
+    public String getTech_username_budget(){ return this.tech_username_budget;}
+    public String getTech_username_repair(){ return this.tech_username_repair;}
     public LocalDate getRequestDate(){ return this.requestDate;}
     public List<Triplet<String, LocalTime, Double>> getTodo(){ return new ArrayList<>(this.estimatedTODO);}
     public BudgetStatus getStatus(){ return this.status;}
@@ -115,11 +121,14 @@ public class Budget implements Comparable<Budget>, Serializable {
     public void setEquip(Equipment equip){
         this.equip = equip;
     }
-    public void setFinalPrice(double price){
-        this.finalPrice = price;
+    public void setEstimatedPrice(double price){
+        this.estimatedPrice = price;
     }
-    public void setTech_username(String user){
-        this.tech_username = user;
+    public void setTech_username_budget(String user){
+        this.tech_username_budget = user;
+    }
+    public void setTech_username_repair(String user){
+        this.tech_username_repair = user;
     }
     public void setTodo(List<Triplet<String,LocalTime,Double>> list){
         this.estimatedTODO = list;
@@ -141,8 +150,9 @@ public class Budget implements Comparable<Budget>, Serializable {
 
         return this.budgetID.equals(that.budgetID) &&
                 this.clientID.equals(that.clientID) &&
-                this.finalPrice == that.finalPrice &&
-                this.tech_username.equals(that.tech_username) &&
+                this.estimatedPrice == that.estimatedPrice &&
+                this.tech_username_budget.equals(that.tech_username_budget) &&
+                this.tech_username_repair.equals(that.tech_username_repair) &&
                 this.requestDate.equals(that.requestDate) &&
                 this.estimatedTODO.equals(that.estimatedTODO) &&
                 this.status.equals(that.status) &&
@@ -162,12 +172,14 @@ public class Budget implements Comparable<Budget>, Serializable {
                 .append(this.equip.name())
                 .append("\", Express: \"")
                 .append(this.express)
-                .append("\",\n\t   clientId: \"")
+                .append("\"  clientId: \"")
                 .append(this.clientID)
-                .append("\",   Price: \"")
-                .append(this.finalPrice)
-                .append("\",   tech responsible: \"")
-                .append(this.tech_username)
+                .append("\", Price Estimated: \"")
+                .append(this.estimatedPrice)
+                .append("\",\n\t   tech responsible for budget: \"")
+                .append(this.tech_username_budget)
+                .append("\",   tech responsible for repair: \"")
+                .append(this.tech_username_repair)
                 .append("\",   request date: \"")
                 .append(this.requestDate)
                 .append("\",   status: \"")
