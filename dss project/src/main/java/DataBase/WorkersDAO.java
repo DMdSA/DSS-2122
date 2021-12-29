@@ -39,6 +39,10 @@ public class WorkersDAO implements Serializable {
         return this.workersDAO.get(h).containsKey(user);
     }
 
+    public void updateAvaibility(Technician t, boolean flag){
+        t.setAvailability(flag);
+    }
+
     public Worker confirmWorker(String user, String pass){
 
         for(Map.Entry<Hierarchy, Map<String, Worker>> e : this.workersDAO.entrySet()){

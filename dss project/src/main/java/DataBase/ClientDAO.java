@@ -1,7 +1,6 @@
 package DataBase;
 
-import BusinessLayer.Client.Client;
-import BusinessLayer.Services.Service;
+import BusinessLayer.Client;
 
 import java.io.*;
 import java.util.HashMap;

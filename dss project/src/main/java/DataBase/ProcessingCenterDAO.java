@@ -45,6 +45,20 @@ public class ProcessingCenterDAO implements Serializable {
         return null;
     }
 
+    public List<Budget> getByUsername(String username){
+        List<Budget> budgets = new ArrayList<>();
+        for(Map.Entry<BudgetStatus, Map<UUID, Budget>> entry : this.budgets.entrySet()){
+
+            for(Map.Entry<UUID, Budget> e : entry.getValue().entrySet()){
+
+                if(e.getValue().getTech_username_budget().equals(username)){
+                    budgets.add(e.getValue());
+                }
+            }
+        }
+        return budgets;
+    }
+
     /**
      * Get by Client's ID
      */
@@ -64,6 +78,11 @@ public class ProcessingCenterDAO implements Serializable {
             }
         }
         return answer;
+    }
+
+    public Budget getFirst(BudgetStatus bs){
+        TreeMap<UUID,Budget> aux = (TreeMap<UUID, Budget>) this.budgets.get(bs);
+        return aux.firstEntry().getValue();
     }
 
 
@@ -151,6 +170,28 @@ public class ProcessingCenterDAO implements Serializable {
      */
     public Map<UUID,Budget> get_by_state(BudgetStatus s){
         return budgets.get(s);
+    }
+
+
+    public List<Budget> get_by_user_and_status_repair(String s, BudgetStatus bs){
+        List<Budget> aux = new ArrayList<>();
+        for(Map.Entry<UUID, Budget> e : this.budgets.get(bs).entrySet()){
+                if (e.getValue().getTech_username_repair().equals(s)) {
+                    aux.add(e.getValue());
+
+                }
+        }
+        return aux;
+    }
+
+    public List<Budget> get_by_user_and_status_budget(String s, BudgetStatus bs){
+        List<Budget> aux = new ArrayList<>();
+        for(Map.Entry<UUID, Budget> e : this.budgets.get(bs).entrySet()){
+            if (e.getValue().getTech_username_budget().equals(s)) {
+                aux.add(e.getValue());
+            }
+        }
+        return aux;
     }
 
     /**
