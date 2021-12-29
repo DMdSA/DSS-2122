@@ -1,6 +1,6 @@
 package UI;
 
-import BusinessLayer.Client.Client;
+import BusinessLayer.Client;
 
 import java.io.IOException;
 import java.util.Arrays;

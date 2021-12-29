@@ -88,10 +88,14 @@ public class ShopUI {
                         "Exit"
                         , "Login"
                         , "Credits"));
-        //loginMenu.setHandler(0, this::exit);
+        loginMenu.setHandler(0, this::exit);
         loginMenu.setHandler(1, this::login);
         loginMenu.setHandler(2, this::Credits);
         loginMenu.run();
+    }
+
+    private void exit(){
+        System.exit(0);
     }
 
     private void Credits(){
@@ -172,7 +176,7 @@ public class ShopUI {
         CounterMenu.setPreCondition(5, ()->this.services_facade.hasBudgetRequests());
         CounterMenu.setPreCondition(6, ()->this.workers_facade.hasWorkers(Hierarchy.TECHNICIAN));
 
-         //CounterMenu.setHandler(0, this:: ?);
+        CounterMenu.setHandler(0, this::LoginMenu);
         CounterMenu.setHandler(1, clientsUI::consult_client);
         CounterMenu.setHandler(2, clientsUI::RegisterClient);
         CounterMenu.setHandler(3, servicesUI::RegisterNormalService);
@@ -193,18 +197,20 @@ public class ShopUI {
                            "Exit"                                               // 0 TODO
                          , "Consult Service Requests"                           // 1
                          , "Available Express Services"                         // 2
-                         , "Save"                                               // 3
-                         , "Load"                                               // 4
+                         , "Consult My Work"                                    // 3
+                         , "Save"                                               // 4
+                         , "Load"                                               // 5
                  ));
 
         TechnicianMenu.setPreCondition(1, ()->this.services_facade.hasBudgetRequests());
         TechnicianMenu.setPreCondition(2, ()->this.services_facade.hasExpressServices());
 
-        //TechnicianMenu.setHandler(0, this::?);
+        TechnicianMenu.setHandler(0, this::LoginMenu);
         TechnicianMenu.setHandler(1, servicesUI::ConsultBudgetRequest);
         TechnicianMenu.setHandler(2, servicesUI::ConsultExpressServicesMenu);
-        TechnicianMenu.setHandler(3, this::Save);
-        TechnicianMenu.setHandler(4, this::Load);
+        TechnicianMenu.setHandler(3, ()->workersUI.isTechWorking(this.username));
+        TechnicianMenu.setHandler(4, this::Save);
+        TechnicianMenu.setHandler(5, this::Load);
         TechnicianMenu.run();
     }
 
@@ -226,7 +232,7 @@ public class ShopUI {
         ManagerMenu.setPreCondition(4, ()->this.services_facade.hasBudgetRequests());
         ManagerMenu.setPreCondition(5, ()->this.services_facade.hasExpressServices());
 
-        //ManagerMenu.setHandler(0, this::?);
+        ManagerMenu.setHandler(0, this::LoginMenu);
         ManagerMenu.setHandler(1, workersUI::ConsultWorker);
         ManagerMenu.setHandler(2, workersUI::RegisterWorkerMenu);
         ManagerMenu.setHandler(3, clientsUI::consult_client);
@@ -243,6 +249,7 @@ public class ShopUI {
      */
     private void Save(){
         this.workers_facade.save();
+        this.services_facade.save();
         clearview();
     }
 
@@ -253,6 +260,7 @@ public class ShopUI {
      */
     private void Load() throws IOException, ClassNotFoundException {
         this.workers_facade = this.workers_facade.load();
+        this.services_facade = this.services_facade.load();
         clearview();
     }
 }

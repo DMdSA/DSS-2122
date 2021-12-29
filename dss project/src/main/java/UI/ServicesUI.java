@@ -2,7 +2,7 @@ package UI;
 import BusinessLayer.Equipments.Budget;
 import BusinessLayer.Equipments.BudgetStatus;
 import BusinessLayer.Equipments.ExpressRepair;
-import BusinessLayer.Services.Service;
+import BusinessLayer.Service;
 import org.javatuples.Triplet;
 
 import java.io.IOException;
@@ -90,10 +90,12 @@ public class ServicesUI {
                 Arrays.asList(
                         "Back"
                         , BudgetStatus.WITHOUT_BUDGET.toString()
+                        , BudgetStatus.DOING_BUDGET.toString()
                         , BudgetStatus.WAITING_APPROVAL.toString()
                         , BudgetStatus.DECLINED.toString()
                         , BudgetStatus.WAITING_REPAIR.toString()
                         , BudgetStatus.REPAIRING.toString()
+                        , BudgetStatus.ON_HOLD.toString()
                         , BudgetStatus.WAITING_PICKUP.toString()
                         , BudgetStatus.DELIVERED.toString()
                         , BudgetStatus.ARCHIVED.toString()
@@ -101,13 +103,15 @@ public class ServicesUI {
 
         ConsultStatus.setHandler(0, this::ConsultBudgetRequest);
         ConsultStatus.setHandler(1, () -> ConsultBudget(BudgetStatus.WITHOUT_BUDGET));
-        ConsultStatus.setHandler(2, () -> ConsultBudget(BudgetStatus.WAITING_APPROVAL));
-        ConsultStatus.setHandler(3, () -> ConsultBudget(BudgetStatus.DECLINED));
-        ConsultStatus.setHandler(4, () -> ConsultBudget(BudgetStatus.WAITING_REPAIR));
-        ConsultStatus.setHandler(5, () -> ConsultBudget(BudgetStatus.REPAIRING));
-        ConsultStatus.setHandler(6, () -> ConsultBudget(BudgetStatus.WAITING_PICKUP));
-        ConsultStatus.setHandler(7, () -> ConsultBudget(BudgetStatus.DELIVERED));
-        ConsultStatus.setHandler(8, () -> ConsultBudget(BudgetStatus.ARCHIVED));
+        ConsultStatus.setHandler(2, () -> ConsultBudget(BudgetStatus.DOING_BUDGET));
+        ConsultStatus.setHandler(3, () -> ConsultBudget(BudgetStatus.WAITING_APPROVAL));
+        ConsultStatus.setHandler(4, () -> ConsultBudget(BudgetStatus.DECLINED));
+        ConsultStatus.setHandler(5, () -> ConsultBudget(BudgetStatus.WAITING_REPAIR));
+        ConsultStatus.setHandler(6, () -> ConsultBudget(BudgetStatus.REPAIRING));
+        ConsultStatus.setHandler(7, () -> ConsultBudget(BudgetStatus.ON_HOLD));
+        ConsultStatus.setHandler(8, () -> ConsultBudget(BudgetStatus.WAITING_PICKUP));
+        ConsultStatus.setHandler(9, () -> ConsultBudget(BudgetStatus.DELIVERED));
+        ConsultStatus.setHandler(10, () -> ConsultBudget(BudgetStatus.ARCHIVED));
         ConsultStatus.run();
     }
 
@@ -144,7 +148,10 @@ public class ServicesUI {
         this.updateBudgetMenu(budgets);
     }
 
-
+    /**
+     * Auxiliar Menu to choose if you want to update a budget
+     *  @param budgets List of the budgets with given client NIF
+     */
     private void updateBudgetMenu(List<Budget> budgets) throws IOException, ClassNotFoundException {
         Menu confirmupdatebudget = new Menu("Do you want to update any budget?",
                 Arrays.asList(
@@ -156,11 +163,15 @@ public class ServicesUI {
         confirmupdatebudget.run();
     }
 
+    /**
+     * Auxiliar Function to choose from a list of budgets which budget to update
+     *  @param budgets List of the budgets with given client NIF
+     */
     private void which_budget(List<Budget> budgets) throws IOException, ClassNotFoundException {
         clearview();
 
         for (int i = 0; i < budgets.size(); i++) {
-            System.out.println("Got(#" + (i + 1) + ") : " + budgets.get(i));
+            System.out.println("Got(#" + (i + 1) + ") : " + budgets.get(i)); //i+1 para na consola aparecer de 1 ate list.size +1, para deixar 0 como exit
         }
         System.out.println("\nIntroduz o numero do budget a atualizar ou 0 para voltar atras: ");
         int choice = Integer.parseInt(shopUI.getScanner().nextLine());
@@ -168,14 +179,19 @@ public class ServicesUI {
             updateBudgetMenu(budgets);
         }
         if (choice < 1 || choice > budgets.size() + 1) {
-            System.out.println("Numero inválido");
+            System.out.println("Numero inválido"); //Caso a escolha nao corresponda a budget nenhum, erro e volta para tras
             shopUI.pause();
             updateBudgetMenu(budgets);
         } else {
-            which_parameter_to_update_budget(budgets.get(choice - 1), budgets);
+            which_parameter_to_update_budget(budgets.get(choice - 1), budgets); //choice - 1 para o range voltar de 0 a list.size
         }
     }
 
+    /**
+     * Auxiliar Menu to choose which parameter from a budget to update
+     * @param b budget previously chosen to update
+     *  @param budgets List of the budgets with given client NIF
+     */
     private void which_parameter_to_update_budget(Budget b, List<Budget> budgets) throws IOException, ClassNotFoundException {
         Menu budget_parameters = new Menu("Which parameter to change?",
                 Arrays.asList(
@@ -191,21 +207,37 @@ public class ServicesUI {
         budget_parameters.run();
     }
 
+    /**
+     * Auxiliar fuction to get the new price of a budget and update it
+     * @param b budget previously chosen to update
+     */
     private void change_preco_budget(Budget b) {
 
         System.out.print("New price: ");
         double new_price = Double.parseDouble(shopUI.getScanner().nextLine());
 
-        shopUI.getServices_facade().update_budget(b, new_price, b.getTodo(), b.getStatus());
+        boolean flag = shopUI.getServices_facade().update_budget(b, new_price, b.getTodo(), b.getStatus());
+
+        if (flag){
+            System.out.println("# Budget updated with success");
+        }
+        else {
+            System.out.println("#> error: could not update budget" + b.getBudgetID());
+        }
+        shopUI.pause();
         clearview();
     }
 
+    /**
+     * Auxiliar fuction to get a list of steps to update in the Budget b
+     * @param b budget previously chosen to update
+     */
     private void change_passos_budget(Budget b) {
 
         boolean flag = true;
         List<Triplet<String, LocalTime, Double>> new_passos = new ArrayList<>();
 
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("H:mm:ss");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("H:mm:ss"); //formatter to convert from string to LocalTime
         while (flag) {
             System.out.print("Introduz a descrição do passo: ");
             String aux_s = shopUI.getScanner().nextLine();
@@ -226,33 +258,40 @@ public class ServicesUI {
             }
         }
 
-        shopUI.getServices_facade().update_budget(b, b.getFinalPrice(), new_passos, b.getStatus());
-        shopUI.getServices_facade().view_passos(b);
+        shopUI.getServices_facade().update_budget(b, b.getEstimatedPrice(), new_passos, b.getStatus());
+        shopUI.getServices_facade().view_passos(b); //DEBUGG TODO Remover isto//DEBUGG TODO Remover isto
     }
 
-
+    /**
+     * Auxiliar fuction to choose the new status of a budget
+     * @param b budget previously chosen to update
+     */
     private void change_estado_budget(Budget b, List<Budget> budgets) throws IOException, ClassNotFoundException {
         clearview();
         System.out.println("""
                 \\---<>* STATES *<>---\\\s
                 (1) - WITHOUT_BUDGET\s
-                (2) - WAITING_APPROVAL\s
-                (3) - DECLINED\s
-                (4) - WAITING_REPAIR\s
-                (5) - REPAIRING\s
-                (6) - WAITING_PICKUP\s
-                (7) - DELIVERED\s
-                (8) - ARCHIVED
+                (2) - DOING_BUDGET\s
+                (3) - WAITING_APPROVAL\s
+                (4) - DECLINED\s
+                (5) - WAITING_REPAIR\s
+                (6) - REPAIRING\s
+                (7) - ON_HOLD\s
+                (8) - WAITING_PICKUP\s
+                (9) - DELIVERED\s
+                (10) - ARCHIVED
                 """);
         System.out.println("#> Option: ");
         int choice = Integer.parseInt(shopUI.getScanner().nextLine());
-        if (choice < 1 || choice > 8) {
+        if (choice < 1 || choice > 10) {
             System.out.println("#> error: Unavailable option");
             shopUI.pause();
             which_parameter_to_update_budget(b, budgets);
+        }else {
+            shopUI.getServices_facade().update_budget(b, b.getEstimatedPrice(), b.getTodo(), BudgetStatus.getStatus(choice));
+            System.out.println(("#> STATE UPDATED!"));
         }
-        //shopUI.getWorkers_facade().updateBudgetStatus()
-        shopUI.getServices_facade().update_budget(b, b.getFinalPrice(), b.getTodo(), BudgetStatus.getStatus(choice));
+        shopUI.pause();
     }
 
 
@@ -309,17 +348,17 @@ public class ServicesUI {
 
         String option;
         int op;
-        System.out.print("Option: ");
+        System.out.print("Service Token: ");
         try {
             option = shopUI.getScanner().nextLine();
             op = Integer.parseInt(option);
         } catch (NumberFormatException e) {
-            System.out.println("Opção Inválida!!!");
+            System.out.println("Invalid Service!!!");
             shopUI.pause();
             return;
         }
         if (op <= 0 || op > size) {
-            System.out.println("Opção Inválida!!!");
+            System.out.println("Invalid Service!!!");
             shopUI.pause();
             return;
         }

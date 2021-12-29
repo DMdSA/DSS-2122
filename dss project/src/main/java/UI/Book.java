@@ -1,14 +1,13 @@
 package UI;
 
 
-import BusinessLayer.Client.Client;
+import BusinessLayer.Client;
 import BusinessLayer.Equipments.Budget;
 import BusinessLayer.Equipments.ExpressRepair;
 import BusinessLayer.Workers.Hierarchy;
 import BusinessLayer.Workers.Worker;
 import DataBase.ClientDAO;
 import DataBase.WorkersDAO;
-
 import java.util.*;
 
 public class Book {
@@ -39,7 +38,6 @@ public class Book {
     public static void show_clients(ClientDAO clients){
 
         Map<String, Client> client_map = clients.get();
-
         List<Object> list = Arrays.asList(client_map.values().stream().toList().toArray());
 
         Show_book(list);
