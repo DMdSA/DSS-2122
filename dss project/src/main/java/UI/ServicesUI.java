@@ -48,7 +48,7 @@ public class ServicesUI {
         System.out.print("#> Equipment description: ");
         String equipment_name = shopUI.getScanner().nextLine();
         // regista um pedido de orçamento
-        this.shopUI.getServices_facade().registerBudgetRequest(this.shopUI.getWorkers_facade(), new Service(nif, equipment_name, shopUI.getUsername()));    //TODO CUIDADO COUNTERID
+        this.shopUI.getServices_facade().registerBudgetRequest(this.shopUI.getWorkers_facade(), new Service(nif, equipment_name, shopUI.getUsername()));
         System.out.println("New register made for nif [" + nif + "]");
         shopUI.pause();
         clearview();

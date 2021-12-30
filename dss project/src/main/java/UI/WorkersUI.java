@@ -588,7 +588,7 @@ public class WorkersUI {
         if(choice == 1){
 
             // Se o orçamento foi terminado, o estado do mesmo é atualizado para WAITING_REPAIR
-            this.shopUI.getServices_facade().updateBudgetStatus(b,BudgetStatus.WAITING_REPAIR);
+            this.shopUI.getServices_facade().updateBudgetStatus(b,BudgetStatus.WAITING_APPROVAL);
             // o técnico de reparações volta a estar disponível
             this.shopUI.getWorkers_facade().update_worker_availability(username,true);
             shopUI.MainMenu();
